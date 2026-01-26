@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Carrinho — Tha Moda</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <script type="module" src="./js/app.js"></script>
+</head>
+<body data-page="carrinho">
+
+<header>
+  <div class="header-inner">
+    <a class="brand" href="./index.html"><span class="dot"></span><span>Tha Moda & Acessórios</span></a>
+    <nav class="nav">
+      <a href="./loja.html">Loja</a>
+      <a href="./sobre.html">Sobre</a>
+      <a href="./contato.html">Contato</a>
+    </nav>
+    <div class="actions">
+      <span class="pill">Itens <span class="badge" id="cartCount">0</span></span>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <h1 class="section-title">Carrinho</h1>
+
+  <div class="grid" id="cartList"></div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="card-body">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div style="font-weight:900">Total:</div>
+        <div style="font-size:20px;font-weight:900" id="cartTotalValue">R$ 0,00</div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>CEP (opcional)</label>
+          <input id="cep" placeholder="00000-000">
+        </div>
+        <div class="field">
+          <label>Pagamento (opcional)</label>
+          <select id="payment">
+            <option value="">Selecione</option>
+            <option>Pix</option>
+            <option>Cartão</option>
+            <option>Dinheiro</option>
+            <option>Link de pagamento</option>
+          </select>
+        </div>
+        <div class="field-12">
+          <label>Observação (opcional)</label>
+          <textarea id="note" placeholder="Ex: se não tiver M, pode ser G..."></textarea>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px">
+        <button class="btn btn-primary btn-wide" id="btnCheckout">Finalizar no WhatsApp</button>
+        <button class="btn btn-ghost btn-wide" id="btnClearCart">Limpar carrinho</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col"><a href="./loja.html">Continuar comprando</a></div>
+  </div>
+</footer>
+
+</body>
+</html>

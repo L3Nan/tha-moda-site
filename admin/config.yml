@@ -6,13 +6,47 @@ media_folder: "uploads"
 public_folder: "/uploads"
 
 collections:
-  - name: "products"
-    label: "Produtos"
-    folder: "data"
-    create: true
-    fields:
-      - { label: "Nome", name: "name", widget: "string" }
-      - { label: "Preço", name: "price", widget: "number" }
-      - { label: "Descrição", name: "description", widget: "text" }
-      - { label: "Imagem", name: "image", widget: "image" }
-      
+  - name: "conteudo"
+    label: "Conteúdo do Site"
+    files:
+      - name: "products"
+        label: "Produtos"
+        file: "data/products.json"
+        format: "json"
+        fields:
+          - name: "products"
+            label: "Lista de produtos"
+            widget: "list"
+            summary: "{{fields.name}}"
+            fields:
+              - { name: "id", label: "ID", widget: "number" }
+              - { name: "slug", label: "Slug (url)", widget: "string" }
+              - { name: "name", label: "Nome", widget: "string" }
+              - { name: "category", label: "Categoria (slug)", widget: "string" }
+              - { name: "price", label: "Preço", widget: "number", value_type: "float" }
+              - { name: "salePrice", label: "Preço promocional", widget: "number", value_type: "float", required: false }
+              - { name: "images", label: "Imagens", widget: "list", field: { label: "Imagem", name: "image", widget: "image" } }
+              - { name: "sizes", label: "Tamanhos", widget: "list" }
+              - { name: "colors", label: "Cores", widget: "list" }
+              - { name: "description", label: "Descrição", widget: "text" }
+              - { name: "details", label: "Detalhes", widget: "text", required: false }
+              - { name: "sizeGuide", label: "Tabela de medidas (texto)", widget: "text", required: false }
+              - { name: "tags", label: "Tags", widget: "list", required: false }
+              - { name: "inStock", label: "Em estoque", widget: "boolean", default: true }
+
+      - name: "categories"
+        label: "Categorias"
+        file: "data/categories.json"
+        format: "json"
+        fields:
+          - name: "categories"
+            label: "Lista de categorias"
+            widget: "list"
+            summary: "{{fields.name}}"
+            fields:
+              - { name: "id", label: "ID", widget: "number" }
+              - { name: "name", label: "Nome", widget: "string" }
+              - { name: "slug", label: "Slug (url)", widget: "string" }
+              - { name: "image", label: "Imagem", widget: "image", required: false }
+              - { name: "description", label: "Descrição", widget: "text", required: false }
+              

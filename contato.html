@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contato — Tha Moda</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="brand" href="./index.html"><span class="dot"></span><span>Tha Moda & Acessórios</span></a>
+    <nav class="nav">
+      <a href="./loja.html">Loja</a>
+      <a href="./sobre.html">Sobre</a>
+    </nav>
+    <div class="actions">
+      <a class="pill" href="./carrinho.html">Carrinho <span class="badge" id="cartCount">0</span></a>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <h1 class="section-title">Contato</h1>
+  <div class="notice">
+    <p><strong>WhatsApp:</strong> coloque aqui o número oficial.</p>
+    <p><strong>Instagram:</strong> @thamadaeacessorios</p>
+    <p><strong>Horário:</strong> seg–sex, 9h–18h (exemplo)</p>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col"><a href="./loja.html">Loja</a></div>
+  </div>
+</footer>
+
+<script type="module">
+  import { cartCount } from "./js/cart.js";
+  document.getElementById("cartCount").textContent = cartCount();
+</script>
+
+</body>
+</html>

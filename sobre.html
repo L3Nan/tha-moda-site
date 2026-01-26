@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sobre — Tha Moda</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="brand" href="./index.html"><span class="dot"></span><span>Tha Moda & Acessórios</span></a>
+    <nav class="nav">
+      <a href="./loja.html">Loja</a>
+      <a href="./contato.html">Contato</a>
+    </nav>
+    <div class="actions">
+      <a class="pill" href="./carrinho.html">Carrinho <span class="badge" id="cartCount">0</span></a>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <h1 class="section-title">Sobre</h1>
+  <div class="notice">
+    Conte aqui a história da marca, diferenciais e proposta (texto da cliente).
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col"><a href="./politica-de-privacidade.html">Privacidade</a></div>
+    <div class="footer-col"><a href="./termos-de-uso.html">Termos</a></div>
+    <div class="footer-col"><a href="./contato.html">Contato</a></div>
+  </div>
+</footer>
+
+<script type="module">
+  import { cartCount } from "./js/cart.js";
+  document.getElementById("cartCount").textContent = cartCount();
+</script>
+
+</body>
+</html>

@@ -1,33 +1,98 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Tha Moda & Acessórios</title>
-<link rel="stylesheet" href="/css/style.css">
-<script src="/js/data.js"></script>
-<script src="/js/app.js" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tha Moda & Acessórios</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <script type="module" src="./js/app.js"></script>
 </head>
+<body data-page="home">
 
-<body>
 <header>
-  <h1>Tha Moda & Acessórios</h1>
-  <nav>
-    <a href="/">Home</a>
-    <a href="/loja.html">Loja</a>
-    <a href="/contato.html">Contato</a>
-  </nav>
+  <div class="header-inner">
+    <a class="brand" href="./index.html">
+      <span class="dot"></span><span>Tha Moda & Acessórios</span>
+    </a>
+
+    <nav class="nav">
+      <a href="./loja.html">Loja</a>
+      <a href="./sobre.html">Sobre</a>
+      <a href="./contato.html">Contato</a>
+    </nav>
+
+    <div class="actions">
+      <a class="pill" href="./carrinho.html">
+        Carrinho <span class="badge" id="cartCount">0</span>
+      </a>
+      <a class="btn btn-primary" href="./loja.html">Comprar</a>
+    </div>
+  </div>
 </header>
 
-<section class="container">
-  <h2>Moda feminina com estilo</h2>
-  <p>Escolha suas peças e finalize no WhatsApp</p>
-</section>
+<main class="container">
+  <section class="section">
+    <div class="card" style="background:var(--bg-soft)">
+      <div class="card-body" style="padding:18px">
+        <div class="tag">Moda feminina</div>
+        <h1 class="section-title" style="margin-top:10px">Monte seu carrinho e finalize no WhatsApp</h1>
+        <p class="muted">Catálogo organizado, variações de cor/tamanho e pedido finalizado com mensagem automática.</p>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn btn-primary" href="./loja.html">Ver loja</a>
+          <a class="btn btn-ghost" href="./entrega-e-prazos.html">Entrega e prazos</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<section class="container">
-  <h3>Novidades</h3>
-  <div class="grid" id="productGrid"></div>
-</section>
+  <section class="section">
+    <h2 class="section-title">Categorias</h2>
+    <div class="grid" id="gridCategorias"></div>
+  </section>
 
-<footer>© Tha Moda & Acessórios</footer>
+  <section class="section">
+    <h2 class="section-title">Novidades</h2>
+    <div class="grid" id="gridNovidades"></div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Promoções</h2>
+    <div class="grid" id="gridPromocoes"></div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Mais vendidos</h2>
+    <div class="grid" id="gridMaisVendidos"></div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Atendimento</h2>
+    <div class="notice">
+      Atendimento via WhatsApp. Pedido finalizado com itens, total, CEP e observação.
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <strong style="color:var(--brand)">Tha Moda & Acessórios</strong>
+      <div class="muted">Moda feminina com estilo e atendimento direto.</div>
+    </div>
+    <div class="footer-col">
+      <strong>Links</strong>
+      <div><a href="./entrega-e-prazos.html">Entrega e prazos</a></div>
+      <div><a href="./trocas-e-devolucoes.html">Trocas e devoluções</a></div>
+      <div><a href="./politica-de-privacidade.html">Privacidade</a></div>
+      <div><a href="./termos-de-uso.html">Termos</a></div>
+    </div>
+    <div class="footer-col">
+      <strong>Contato</strong>
+      <div><a href="./contato.html">WhatsApp / Instagram</a></div>
+      <div class="muted">© Todos os direitos reservados</div>
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>
