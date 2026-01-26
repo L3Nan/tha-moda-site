@@ -1,20 +1,38 @@
 <!doctype html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Admin — Tha Moda</title>
 
-  <!-- Netlify Identity (login) -->
+  <!-- Netlify Identity -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
-  <!-- Decap CMS -->
-  <script src="https://unpkg.com/decap-cms@latest/dist/decap-cms.js"></script>
+  <!-- Força o caminho do config.yml (recomendado pela doc do Decap) -->
+  <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
 </head>
 <body>
+  <noscript>Ative o JavaScript para usar o painel.</noscript>
+
   <script>
+    // Inicialização manual (evita "tela branca silenciosa")
+    window.CMS_MANUAL_INIT = true;
+  </script>
+
+  <!-- Decap CMS via jsDelivr (mais estável que unpkg em vários casos) -->
+  <script src="https://cdn.jsdelivr.net/npm/decap-cms@latest/dist/decap-cms.js"></script>
+
+  <script>
+    try {
+      CMS.init();
+    } catch (e) {
+      document.body.innerHTML =
+        "<div style='padding:16px;font-family:Arial'>Falha ao carregar o CMS. Abra o Console (F12) para ver o erro.</div>";
+      console.error(e);
+    }
+
     if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
+      window.netlifyIdentity.on("init", (user) => {
         if (!user) {
           window.netlifyIdentity.on("login", () => {
             document.location.href = "/admin/";
