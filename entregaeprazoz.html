@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrega e Prazos — Tha Moda</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="brand" href="./index.html"><span class="dot"></span><span>Tha Moda & Acessórios</span></a>
+    <nav class="nav">
+      <a href="./loja.html">Loja</a>
+      <a href="./sobre.html">Sobre</a>
+      <a href="./contato.html">Contato</a>
+    </nav>
+    <div class="actions">
+      <a class="pill" href="./carrinho.html">Carrinho <span class="badge" id="cartCount">0</span></a>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <h1 class="section-title">Entrega e Prazos</h1>
+
+  <section class="section">
+    <h2 class="section-title" style="font-size:20px">Formas de Entrega</h2>
+    <div class="notice">
+      <p><strong>Correios PAC:</strong> Entrega em até 15 dias úteis após postagem.</p>
+      <p><strong>Correios SEDEX:</strong> Entrega em até 3 dias úteis após postagem.</p>
+      <p><strong>Transportadora:</strong> Para regiões metropolitanas, entrega em até 5 dias úteis.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title" style="font-size:20px">Prazos de Entrega</h2>
+    <div class="notice">
+      <p>Os prazos começam a contar a partir da confirmação do pagamento.</p>
+      <p>Em períodos de alta demanda (feriados, promoções), os prazos podem ser maiores.</p>
+      <p>Você será informado por e-mail sobre o andamento do pedido.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title" style="font-size:20px">Custos de Entrega</h2>
+    <div class="notice">
+      <p>Os custos são calculados com base no peso, volume e destino.</p>
+      <p>Compras acima de R$ 150,00 têm frete grátis.</p>
+      <p>Para calcular o frete exato, adicione os produtos ao carrinho.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title" style="font-size:20px">Regras Gerais</h2>
+    <div class="notice">
+      <p>Não realizamos entregas em caixas postais.</p>
+      <p>É necessário alguém maior de 18 anos para receber a mercadoria.</p>
+      <p>Caso haja ausência no momento da entrega, o produto ficará disponível na agência dos Correios por 7 dias.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col"><a href="./loja.html">Voltar para loja</a></div>
+  </div>
+</footer>
+
+<script type="module">
+  import { cartCount } from "./js/cart.js";
+  document.getElementById("cartCount").textContent = cartCount();
+</script>
+
+</body>
+</html>

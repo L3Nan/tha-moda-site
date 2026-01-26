@@ -33,6 +33,11 @@
     </nav>
 
     <div class="actions">
+      <button class="pill" id="searchToggle">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </button>
       <a class="pill" href="./carrinho.html">
         Carrinho <span class="badge" id="cartCount">0</span>
       </a>
@@ -40,6 +45,12 @@
     </div>
   </div>
 </header>
+
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-modal">
+    <input type="text" id="searchInput" placeholder="Buscar produtos..." autocomplete="off">
+  </div>
+</div>
 
 <main class="container">
   <section class="section">
@@ -51,6 +62,40 @@
         <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
           <a class="btn btn-primary" href="./loja.html">Ver loja</a>
           <a class="btn btn-ghost" href="./entrega-e-prazos.html">Entrega e prazos</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Por que escolher a Tha Moda?</h2>
+    <div class="grid">
+      <div class="card" style="grid-column: span 3;">
+        <div class="card-body" style="text-align:center">
+          <div style="font-size:32px;margin-bottom:10px">🚚</div>
+          <div class="card-title">Entrega Rápida</div>
+          <div class="muted">Receba seus produtos em até 7 dias úteis</div>
+        </div>
+      </div>
+      <div class="card" style="grid-column: span 3;">
+        <div class="card-body" style="text-align:center">
+          <div style="font-size:32px;margin-bottom:10px">💳</div>
+          <div class="card-title">Pagamento Seguro</div>
+          <div class="muted">Diversas formas de pagamento com total segurança</div>
+        </div>
+      </div>
+      <div class="card" style="grid-column: span 3;">
+        <div class="card-body" style="text-align:center">
+          <div style="font-size:32px;margin-bottom:10px">🔄</div>
+          <div class="card-title">Trocas Fáceis</div>
+          <div class="muted">Política de trocas e devoluções sem complicação</div>
+        </div>
+      </div>
+      <div class="card" style="grid-column: span 3;">
+        <div class="card-body" style="text-align:center">
+          <div style="font-size:32px;margin-bottom:10px">💬</div>
+          <div class="card-title">Atendimento Direto</div>
+          <div class="muted">Fale conosco via WhatsApp a qualquer momento</div>
         </div>
       </div>
     </div>
@@ -74,6 +119,30 @@
   <section class="section">
     <h2 class="section-title">Mais vendidos</h2>
     <div class="grid" id="gridMaisVendidos"></div>
+  </section>
+
+  <section class="section" style="background:var(--bg-soft);padding:32px 0">
+    <div style="text-align:center;margin-bottom:24px">
+      <h2 class="section-title">Siga-nos no Instagram</h2>
+      <p class="muted">Acompanhe nossas novidades e looks inspiradores</p>
+    </div>
+    <div class="grid">
+      <div class="card" style="grid-column: span 3;">
+        <div class="img-box" style="background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:48px">📸</div>
+      </div>
+      <div class="card" style="grid-column: span 3;">
+        <div class="img-box" style="background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:48px">👗</div>
+      </div>
+      <div class="card" style="grid-column: span 3;">
+        <div class="img-box" style="background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:48px">💄</div>
+      </div>
+      <div class="card" style="grid-column: span 3;">
+        <div class="img-box" style="background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:48px">👠</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:24px">
+      <a class="btn btn-primary" href="https://instagram.com/thamadaeacessorios" target="_blank">@thamadaeacessorios</a>
+    </div>
   </section>
 
   <section class="section">

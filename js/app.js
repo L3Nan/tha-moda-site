@@ -7,6 +7,31 @@ import {
 document.addEventListener("DOMContentLoaded", async () => {
   injectCartCount();
 
+  // Search functionality
+  const searchToggle = document.getElementById("searchToggle");
+  const searchOverlay = document.getElementById("searchOverlay");
+  const searchInput = document.getElementById("searchInput");
+
+  if(searchToggle && searchOverlay){
+    searchToggle.addEventListener("click", () => {
+      searchOverlay.classList.add("active");
+      searchInput.focus();
+    });
+
+    searchOverlay.addEventListener("click", (e) => {
+      if(e.target === searchOverlay) searchOverlay.classList.remove("active");
+    });
+
+    searchInput.addEventListener("keydown", (e) => {
+      if(e.key === "Escape") searchOverlay.classList.remove("active");
+      if(e.key === "Enter") {
+        const q = searchInput.value.trim();
+        if(q) window.location.href = `./loja.html?search=${encodeURIComponent(q)}`;
+        searchOverlay.classList.remove("active");
+      }
+    });
+  }
+
   const page = document.body.dataset.page;
 
   if(page === "home") await initHome();

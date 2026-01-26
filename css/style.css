@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
+
 :root{
   --brand:#FD5CAC;         /* detalhes/links/badges */
   --primary:#C54886;       /* botão principal */
@@ -18,7 +20,7 @@
 
 *{box-sizing:border-box;margin:0;padding:0}
 body{
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background:var(--bg);
   color:var(--text);
   line-height:1.5;
@@ -28,7 +30,7 @@ img{max-width:100%;display:block}
 
 .container{max-width:1180px;margin:0 auto;padding:28px 18px}
 .section{padding:24px 0}
-.section-title{font-size:26px;margin-bottom:10px}
+.section-title{font-family:'Poppins',sans-serif;font-size:26px;margin-bottom:10px;font-weight:600}
 .muted{color:var(--text-2)}
 .hr{height:1px;background:var(--border);margin:18px 0}
 

@@ -3,11 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Categoria — Tha Moda</title>
+  <title>Política de Privacidade — Tha Moda</title>
   <link rel="stylesheet" href="./css/style.css">
-  <script type="module" src="./js/app.js"></script>
 </head>
-<body data-page="categoria">
+<body>
 
 <header>
   <div class="header-inner">
@@ -24,15 +23,81 @@
 </header>
 
 <main class="container">
-  <h1 class="section-title" id="catTitle">Categoria</h1>
-  <div class="grid" id="gridCategoria"></div>
+  <h1 class="section-title">Política de Privacidade</h1>
+
+  <section class="section">
+    <h2 class="section-title" style="font-size:20px">Dados Coletados</h2>
+    <div class="notice">
+      <p>Coletamos apenas as informações necessárias para processar seus pedidos:</p>
+      <ul style="margin-top:8px">
+        <li>Nome e informações de contato (WhatsApp)</li>
+        <li>Endereço de entrega</li>
+        <li>Informações do pedido (produtos, quantidades, valores)</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title" style="font-size:20px">Cookies e Armazenamento Local</h2>
+    <div class="notice">
+      <p>Utilizamos LocalStorage do navegador para armazenar o carrinho de compras temporariamente.</p>
+      <p>Não utilizamos cookies de rastreamento ou publicidade de terceiros.</p>
+      <p>Seus dados ficam armazenados apenas no seu dispositivo até a finalização do pedido.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title" style="font-size:20px">Uso das Informações</h2>
+    <div class="notice">
+      <p>As informações coletadas são usadas exclusivamente para:</p>
+      <ul style="margin-top:8px">
+        <li>Processar e entregar seus pedidos</li>
+        <li>Entrar em contato sobre o status do pedido</li>
+        <li>Melhorar nossos serviços</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title" style="font-size:20px">Compartilhamento de Dados</h2>
+    <div class="notice">
+      <p>Não vendemos, alugamos ou compartilhamos seus dados pessoais com terceiros.</p>
+      <p>Podemos compartilhar informações apenas quando necessário para processar pagamentos ou entregas.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title" style="font-size:20px">Seus Direitos (LGPD)</h2>
+    <div class="notice">
+      <p>Você tem direito a:</p>
+      <ul style="margin-top:8px">
+        <li>Acessar seus dados pessoais</li>
+        <li>Corrigir dados incompletos ou incorretos</li>
+        <li>Solicitar exclusão de seus dados</li>
+        <li>Portabilidade dos dados</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title" style="font-size:20px">Contato para Remoção de Dados</h2>
+    <div class="notice">
+      <p>Para solicitar a remoção ou correção de seus dados, entre em contato via WhatsApp.</p>
+      <p>Responderemos sua solicitação em até 15 dias úteis.</p>
+    </div>
+  </section>
 </main>
 
 <footer class="footer">
   <div class="footer-inner">
-    <div class="footer-col"><a href="./loja.html">Voltar para loja</a></div>
+    <div class="footer-col"><a href="./termos-de-uso.html">Termos de Uso</a></div>
   </div>
 </footer>
+
+<script type="module">
+  import { cartCount } from "./js/cart.js";
+  document.getElementById("cartCount").textContent = cartCount();
+</script>
 
 </body>
 </html>

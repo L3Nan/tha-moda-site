@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trocas e Devoluções — Tha Moda</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="brand" href="./index.html"><span class="dot"></span><span>Tha Moda & Acessórios</span></a>
+    <nav class="nav">
+      <a href="./loja.html">Loja</a>
+      <a href="./sobre.html">Sobre</a>
+      <a href="./contato.html">Contato</a>
+    </nav>
+    <div class="actions">
+      <a class="pill" href="./carrinho.html">Carrinho <span class="badge" id="cartCount">0</span></a>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <h1 class="section-title">Trocas e Devoluções</h1>
+
+  <section class="section">
+    <h2 class="section-title" style="font-size:20px">Prazo para Solicitação</h2>
+    <div class="notice">
+      <p>Você tem até 7 dias corridos após o recebimento do produto para solicitar troca ou devolução.</p>
+      <p>O produto deve estar em perfeito estado, sem sinais de uso, com etiquetas originais e na embalagem original.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title" style="font-size:20px">Condições para Troca/Devolução</h2>
+    <div class="notice">
+      <p><strong>Produto não utilizado:</strong> Não pode ter sido usado ou lavado.</p>
+      <p><strong>Embalagem intacta:</strong> Deve vir com todas as etiquetas, tags e embalagem original.</p>
+      <p><strong>Defeito de fabricação:</strong> Aceitamos devolução em caso de defeito comprovado.</p>
+      <p><strong>Arrependimento:</strong> Direito de arrependimento em até 7 dias conforme Código de Defesa do Consumidor.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title" style="font-size:20px">Como Solicitar</h2>
+    <div class="notice">
+      <p>Entre em contato conosco via WhatsApp informando:</p>
+      <ul style="margin-top:8px">
+        <li>Número do pedido</li>
+        <li>Motivo da troca/devolução</li>
+        <li>Fotos do produto (se aplicável)</li>
+      </ul>
+      <p style="margin-top:12px">Após análise, enviaremos as instruções para postagem.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title" style="font-size:20px">Regras do Frete</h2>
+    <div class="notice">
+      <p><strong>Troca:</strong> O frete de retorno é por conta do cliente. O frete de reenvio é por nossa conta.</p>
+      <p><strong>Devolução:</strong> O frete de retorno é por conta do cliente. Reembolso em até 10 dias úteis após recebimento.</p>
+      <p><strong>Defeito:</strong> Ambos os fretes são por nossa conta.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col"><a href="./contato.html">Fale conosco</a></div>
+  </div>
+</footer>
+
+<script type="module">
+  import { cartCount } from "./js/cart.js";
+  document.getElementById("cartCount").textContent = cartCount();
+</script>
+
+</body>
+</html>
