@@ -96,12 +96,68 @@ async function initLoja(){
   // Renderizar vitrine com produtos em destaque
   renderProductsSection("gridVitrine", products.slice(0, 12)); // Mostra os primeiros 12 produtos como vitrine
 
+  const categoryBar = document.getElementById("categoryBar");
   const selCat = document.getElementById("filterCategory");
   const selSize = document.getElementById("filterSize");
   const selColor = document.getElementById("filterColor");
   const onlySale = document.getElementById("filterSale");
   const search = document.getElementById("filterSearch");
   const sort = document.getElementById("filterSort");
+
+  // lê cat e search da URL (se vier do overlay que manda ?search=...)
+  const initialCat = getParam("cat") || "";
+  const initialSearch = getParam("search") || "";
+  if(initialSearch && search) search.value = initialSearch;
+
+  // categorias "de UI" (não mexe no categories.json)
+  const barCats = [
+    { label: "TODOS", slug: "" },
+    { label: "BRINCOS", slug: "brincos" },
+    { label: "PULSEIRAS & COLARES", slug: "pulseiras-colares" },
+    { label: "SAPATOS", slug: "sapatos" },
+    { label: "TÊNIS", slug: "tenis" },
+    { label: "SANDÁLIAS", slug: "sandalias" },
+    { label: "VESTIDOS", slug: "vestidos" },
+    { label: "BLUSAS", slug: "blusas" },
+    { label: "CALÇAS", slug: "calcas" },
+    { label: "SAIAS", slug: "saias" },
+    { label: "MACACÃO", slug: "macacao" },
+  ];
+
+  let activeCat = initialCat; // estado principal
+
+  function renderCategoryBar(){
+    if(!categoryBar) return;
+
+    categoryBar.innerHTML = barCats.map(c => `
+      <button type="button"
+        class="category-btn ${c.slug === activeCat ? "is-active" : ""}"
+        data-cat="${c.slug}">
+        ${c.label}
+      </button>
+    `).join("");
+  }
+
+  function setActiveCat(slug){
+    activeCat = slug;
+
+    // sincroniza o select quando for categoria "real"
+    // (para pulseiras-colares/tenis/sandalias deixamos select em branco)
+    const isReal = categories.some(c => c.slug === slug);
+    selCat.value = isReal ? slug : "";
+
+    // atualiza URL
+    setUrlParam("cat", slug);
+
+    // re-render da barra (pra mudar ativo)
+    renderCategoryBar();
+
+    // scroll suave pro ativo
+    const activeBtn = categoryBar?.querySelector(".is-active");
+    activeBtn?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+
+    render();
+  }
 
   // popula categorias
   selCat.innerHTML = `<option value="">Todas</option>` + categories.map(c => `<option value="${c.slug}">${escapeHtml(c.name)}</option>`).join("");
@@ -116,13 +172,23 @@ async function initLoja(){
   const render = () => {
     let list = [...products];
 
-    const cat = selCat.value;
+    const cat = activeCat; // usa a barra como principal
     const size = selSize.value;
     const color = selColor.value;
     const sale = onlySale.checked;
     const q = (search.value || "").trim().toLowerCase();
 
-    if(cat) list = list.filter(p => p.category === cat);
+    if(cat){
+      if(cat === "pulseiras-colares"){
+        list = list.filter(p => p.category === "pulseiras" || p.category === "colares");
+      } else if(cat === "tenis"){
+        list = list.filter(p => p.category === "sapatos" && normText(p.name).includes("tenis"));
+      } else if(cat === "sandalias"){
+        list = list.filter(p => p.category === "sapatos" && normText(p.name).includes("sandalia"));
+      } else {
+        list = list.filter(p => p.category === cat);
+      }
+    }
     if(size) list = list.filter(p => (p.sizes||[]).includes(size));
     if(color) list = list.filter(p => (p.colors||[]).includes(color));
     if(sale) list = list.filter(p => !!p.salePrice);
@@ -147,6 +213,24 @@ async function initLoja(){
 
   [selCat, selSize, selColor, onlySale, sort].forEach(x => x.addEventListener("change", render));
   search.addEventListener("input", render);
+
+  // se o usuário mexer no select manualmente, a barra acompanha
+  selCat.addEventListener("change", () => {
+    activeCat = selCat.value || "";
+    setUrlParam("cat", activeCat);
+    renderCategoryBar();
+    render();
+  });
+
+  // primeira renderização (já respeita ?cat e ?search)
+  renderCategoryBar();
+
+  // bind click events for category bar
+  categoryBar?.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-cat]");
+    if(!btn) return;
+    setActiveCat(btn.dataset.cat || "");
+  });
 
   render();
 }
