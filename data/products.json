@@ -1,300 +1,448 @@
 {
   "products": [
     {
-      "id": 1001,
-      "slug": "brinco-argola-dourada",
-      "name": "Brinco Argola Dourada",
-      "category": "brincos",
-      "price": 39.9,
       "salePrice": null,
-      "images": [],
-      "sizes": ["Único"],
-      "colors": ["Dourado"],
-      "description": "Argola clássica com acabamento brilhante, leve e perfeita para o dia a dia.",
       "details": "Leve e confortável. Evite contato com água e perfume para maior durabilidade.",
+      "price": 39.9,
+      "name": "Brinco Argola Dourada",
+      "slug": "brinco-argola-dourada",
+      "colors": [
+        "Dourado"
+      ],
+      "inStock": true,
+      "sizes": [
+        "Único"
+      ],
+      "images": [],
+      "tags": [
+        "mais_vendidos"
+      ],
+      "id": 1001,
       "sizeGuide": "Tamanho único.",
-      "tags": ["mais_vendidos"],
-      "inStock": true
+      "description": "Argola clássica com acabamento brilhante, leve e perfeita para o dia a dia.",
+      "category": "lanterna"
     },
     {
-      "id": 1002,
-      "slug": "brinco-ponto-de-luz-prata",
-      "name": "Brinco Ponto de Luz Prata",
-      "category": "brincos",
-      "price": 29.9,
       "salePrice": 24.9,
-      "images": [],
-      "sizes": ["Único"],
-      "colors": ["Prata"],
-      "description": "Delicado e elegante, ideal para compor looks minimalistas.",
       "details": "Design discreto. Ótima opção para presentear.",
-      "sizeGuide": "Tamanho único.",
-      "tags": ["novidades", "promocoes"],
-      "inStock": true
-    },
-
-    {
-      "id": 1101,
-      "slug": "pulseira-corrente-dourada",
-      "name": "Pulseira Corrente Dourada",
-      "category": "pulseiras",
-      "price": 49.9,
-      "salePrice": null,
-      "images": [],
-      "sizes": ["Único"],
-      "colors": ["Dourado"],
-      "description": "Pulseira corrente com estilo moderno e fácil de combinar.",
-      "details": "Fecho prático. Ajuste confortável.",
-      "sizeGuide": "Tamanho único.",
-      "tags": ["mais_vendidos"],
-      "inStock": true
-    },
-    {
-      "id": 1102,
-      "slug": "pulseira-miçangas-coloridas",
-      "name": "Pulseira Miçangas Coloridas",
-      "category": "pulseiras",
       "price": 29.9,
-      "salePrice": null,
+      "name": "Brinco Ponto de Luz Prata",
+      "slug": "brinco-ponto-de-luz-prata",
+      "colors": [
+        "Prata"
+      ],
+      "inStock": true,
+      "sizes": [
+        "Único"
+      ],
       "images": [],
-      "sizes": ["Único"],
-      "colors": ["Colorido"],
-      "description": "Pulseira divertida para looks leves e despojados.",
+      "tags": [
+        "novidades",
+        "promocoes"
+      ],
+      "id": 1002,
+      "sizeGuide": "Tamanho único.",
+      "description": "Delicado e elegante, ideal para compor looks minimalistas.",
+      "category": "brincos"
+    },
+    {
+      "salePrice": null,
+      "details": "Fecho prático. Ajuste confortável.",
+      "price": 49.9,
+      "name": "Pulseira Corrente Dourada",
+      "slug": "pulseira-corrente-dourada",
+      "colors": [
+        "Dourado"
+      ],
+      "inStock": true,
+      "sizes": [
+        "Único"
+      ],
+      "images": [],
+      "tags": [
+        "mais_vendidos"
+      ],
+      "id": 1101,
+      "sizeGuide": "Tamanho único.",
+      "description": "Pulseira corrente com estilo moderno e fácil de combinar.",
+      "category": "pulseiras"
+    },
+    {
+      "salePrice": null,
       "details": "Confortável e resistente para uso diário.",
-      "sizeGuide": "Tamanho único.",
-      "tags": ["novidades"],
-      "inStock": true
-    },
-
-    {
-      "id": 1201,
-      "slug": "colar-corrente-fina-dourada",
-      "name": "Colar Corrente Fina Dourada",
-      "category": "colares",
-      "price": 59.9,
-      "salePrice": null,
+      "price": 29.9,
+      "name": "Pulseira Miçangas Coloridas",
+      "slug": "pulseira-miçangas-coloridas",
+      "colors": [
+        "Colorido"
+      ],
+      "inStock": true,
+      "sizes": [
+        "Único"
+      ],
       "images": [],
-      "sizes": ["Único"],
-      "colors": ["Dourado"],
-      "description": "Colar minimalista com corrente fina, ideal para usar sozinho ou em mix.",
+      "tags": [
+        "novidades"
+      ],
+      "id": 1102,
+      "sizeGuide": "Tamanho único.",
+      "description": "Pulseira divertida para looks leves e despojados.",
+      "category": "pulseiras"
+    },
+    {
+      "salePrice": null,
       "details": "Acabamento delicado. Combine com pingentes.",
+      "price": 59.9,
+      "name": "Colar Corrente Fina Dourada",
+      "slug": "colar-corrente-fina-dourada",
+      "colors": [
+        "Dourado"
+      ],
+      "inStock": true,
+      "sizes": [
+        "Único"
+      ],
+      "images": [],
+      "tags": [
+        "mais_vendidos"
+      ],
+      "id": 1201,
       "sizeGuide": "Tamanho único.",
-      "tags": ["mais_vendidos"],
-      "inStock": true
+      "description": "Colar minimalista com corrente fina, ideal para usar sozinho ou em mix.",
+      "category": "colares"
     },
     {
-      "id": 1202,
-      "slug": "colar-pingente-coracao-prata",
-      "name": "Colar Pingente Coração Prata",
-      "category": "colares",
-      "price": 69.9,
       "salePrice": 59.9,
-      "images": [],
-      "sizes": ["Único"],
-      "colors": ["Prata"],
-      "description": "Pingente coração com visual romântico e discreto.",
       "details": "Ótima opção para presente. Evite umidade.",
+      "price": 69.9,
+      "name": "Colar Pingente Coração Prata",
+      "slug": "colar-pingente-coracao-prata",
+      "colors": [
+        "Prata"
+      ],
+      "inStock": true,
+      "sizes": [
+        "Único"
+      ],
+      "images": [],
+      "tags": [
+        "promocoes"
+      ],
+      "id": 1202,
       "sizeGuide": "Tamanho único.",
-      "tags": ["promocoes"],
-      "inStock": true
+      "description": "Pingente coração com visual romântico e discreto.",
+      "category": "colares"
     },
-
     {
-      "id": 1301,
-      "slug": "sandalia-salto-bloco-preta",
-      "name": "Sandália Salto Bloco Preta",
-      "category": "sapatos",
-      "price": 189.9,
       "salePrice": null,
-      "images": [],
-      "sizes": ["34", "35", "36", "37", "38", "39"],
-      "colors": ["Preto"],
-      "description": "Sandália com salto bloco para mais conforto e estabilidade.",
       "details": "Ideal para eventos e uso diário. Ajuste firme.",
+      "price": 189.9,
+      "name": "Sandália Salto Bloco Preta",
+      "slug": "sandalia-salto-bloco-preta",
+      "colors": [
+        "Preto"
+      ],
+      "inStock": true,
+      "sizes": [
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "39"
+      ],
+      "images": [],
+      "tags": [
+        "mais_vendidos"
+      ],
+      "id": 1301,
       "sizeGuide": "Numeração padrão brasileira.",
-      "tags": ["mais_vendidos"],
-      "inStock": true
+      "description": "Sandália com salto bloco para mais conforto e estabilidade.",
+      "category": "sapatos"
     },
     {
-      "id": 1302,
-      "slug": "tenis-casual-branco",
-      "name": "Tênis Casual Branco",
-      "category": "sapatos",
-      "price": 169.9,
       "salePrice": 149.9,
-      "images": [],
-      "sizes": ["34", "35", "36", "37", "38", "39"],
-      "colors": ["Branco"],
-      "description": "Tênis casual confortável, combina com tudo.",
       "details": "Leve, ótimo para o dia a dia.",
+      "price": 169.9,
+      "name": "Tênis Casual Branco",
+      "slug": "tenis-casual-branco",
+      "colors": [
+        "Branco"
+      ],
+      "inStock": true,
+      "sizes": [
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "39"
+      ],
+      "images": [],
+      "tags": [
+        "novidades",
+        "promocoes"
+      ],
+      "id": 1302,
       "sizeGuide": "Numeração padrão brasileira.",
-      "tags": ["novidades", "promocoes"],
-      "inStock": true
+      "description": "Tênis casual confortável, combina com tudo.",
+      "category": "sapatos"
     },
-
     {
-      "id": 1401,
-      "slug": "vestido-midi-floral",
-      "name": "Vestido Midi Floral",
-      "category": "vestidos",
-      "price": 219.9,
       "salePrice": 199.9,
-      "images": [],
-      "sizes": ["P", "M", "G", "GG"],
-      "colors": ["Floral"],
-      "description": "Vestido midi floral leve e elegante, ótimo para ocasiões especiais.",
       "details": "Caimento confortável. Combine com sandália ou tênis.",
+      "price": 219.9,
+      "name": "Vestido Midi Floral",
+      "slug": "vestido-midi-floral",
+      "colors": [
+        "Floral"
+      ],
+      "inStock": true,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG"
+      ],
+      "images": [],
+      "tags": [
+        "promocoes",
+        "mais_vendidos"
+      ],
+      "id": 1401,
       "sizeGuide": "P(36-38), M(40-42), G(44), GG(46).",
-      "tags": ["promocoes", "mais_vendidos"],
-      "inStock": true
+      "description": "Vestido midi floral leve e elegante, ótimo para ocasiões especiais.",
+      "category": "vestidos"
     },
     {
-      "id": 1402,
-      "slug": "vestido-curto-preto-basico",
-      "name": "Vestido Curto Preto Básico",
-      "category": "vestidos",
-      "price": 159.9,
       "salePrice": null,
-      "images": [],
-      "sizes": ["P", "M", "G", "GG"],
-      "colors": ["Preto"],
-      "description": "O pretinho básico que salva qualquer look.",
       "details": "Versátil. Combine com acessórios para elevar o visual.",
-      "sizeGuide": "P(36-38), M(40-42), G(44), GG(46).",
-      "tags": ["novidades"],
-      "inStock": true
-    },
-
-    {
-      "id": 1501,
-      "slug": "blusa-canelada-rosa",
-      "name": "Blusa Canelada Rosa",
-      "category": "blusas",
-      "price": 89.9,
-      "salePrice": null,
+      "price": 159.9,
+      "name": "Vestido Curto Preto Básico",
+      "slug": "vestido-curto-preto-basico",
+      "colors": [
+        "Preto"
+      ],
+      "inStock": true,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG"
+      ],
       "images": [],
-      "sizes": ["P", "M", "G", "GG"],
-      "colors": ["Rosa"],
-      "description": "Blusa canelada com ótimo ajuste e conforto.",
+      "tags": [
+        "novidades"
+      ],
+      "id": 1402,
+      "sizeGuide": "P(36-38), M(40-42), G(44), GG(46).",
+      "description": "O pretinho básico que salva qualquer look.",
+      "category": "vestidos"
+    },
+    {
+      "salePrice": null,
       "details": "Ideal para meia estação. Toque macio.",
+      "price": 89.9,
+      "name": "Blusa Canelada Rosa",
+      "slug": "blusa-canelada-rosa",
+      "colors": [
+        "Rosa"
+      ],
+      "inStock": true,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG"
+      ],
+      "images": [],
+      "tags": [
+        "novidades"
+      ],
+      "id": 1501,
       "sizeGuide": "P(36-38), M(40-42), G(44), GG(46).",
-      "tags": ["novidades"],
-      "inStock": true
+      "description": "Blusa canelada com ótimo ajuste e conforto.",
+      "category": "blusas"
     },
     {
-      "id": 1502,
-      "slug": "camisa-social-branca-feminina",
-      "name": "Camisa Social Branca Feminina",
-      "category": "blusas",
-      "price": 129.9,
       "salePrice": 109.9,
-      "images": [],
-      "sizes": ["P", "M", "G", "GG"],
-      "colors": ["Branco"],
-      "description": "Camisa social moderna para looks elegantes e profissionais.",
       "details": "Caimento alinhado. Combine com calça ou saia.",
-      "sizeGuide": "P(36-38), M(40-42), G(44), GG(46).",
-      "tags": ["promocoes"],
-      "inStock": true
-    },
-
-    {
-      "id": 1601,
-      "slug": "calca-jeans-skinny-azul",
-      "name": "Calça Jeans Skinny Azul",
-      "category": "calcas",
-      "price": 179.9,
-      "salePrice": null,
+      "price": 129.9,
+      "name": "Camisa Social Branca Feminina",
+      "slug": "camisa-social-branca-feminina",
+      "colors": [
+        "Branco"
+      ],
+      "inStock": true,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG"
+      ],
       "images": [],
-      "sizes": ["36", "38", "40", "42", "44"],
-      "colors": ["Jeans"],
-      "description": "Jeans skinny com ótima elasticidade e caimento.",
+      "tags": [
+        "promocoes"
+      ],
+      "id": 1502,
+      "sizeGuide": "P(36-38), M(40-42), G(44), GG(46).",
+      "description": "Camisa social moderna para looks elegantes e profissionais.",
+      "category": "blusas"
+    },
+    {
+      "salePrice": null,
       "details": "Confortável para o dia todo. Modelagem ajustada.",
+      "price": 179.9,
+      "name": "Calça Jeans Skinny Azul",
+      "slug": "calca-jeans-skinny-azul",
+      "colors": [
+        "Jeans"
+      ],
+      "inStock": true,
+      "sizes": [
+        "36",
+        "38",
+        "40",
+        "42",
+        "44"
+      ],
+      "images": [],
+      "tags": [
+        "mais_vendidos"
+      ],
+      "id": 1601,
       "sizeGuide": "Numeração padrão brasileira.",
-      "tags": ["mais_vendidos"],
-      "inStock": true
+      "description": "Jeans skinny com ótima elasticidade e caimento.",
+      "category": "calcas"
     },
     {
-      "id": 1602,
-      "slug": "calca-alfaiataria-preta",
-      "name": "Calça Alfaiataria Preta",
-      "category": "calcas",
-      "price": 209.9,
       "salePrice": 189.9,
-      "images": [],
-      "sizes": ["36", "38", "40", "42", "44"],
-      "colors": ["Preto"],
-      "description": "Alfaiataria moderna com visual elegante e confortável.",
       "details": "Perfeita para trabalho e eventos. Corte reto.",
-      "sizeGuide": "Numeração padrão brasileira.",
-      "tags": ["promocoes"],
-      "inStock": true
-    },
-
-    {
-      "id": 1701,
-      "slug": "saia-midi-plissada-nude",
-      "name": "Saia Midi Plissada Nude",
-      "category": "saias",
-      "price": 149.9,
-      "salePrice": null,
+      "price": 209.9,
+      "name": "Calça Alfaiataria Preta",
+      "slug": "calca-alfaiataria-preta",
+      "colors": [
+        "Preto"
+      ],
+      "inStock": true,
+      "sizes": [
+        "36",
+        "38",
+        "40",
+        "42",
+        "44"
+      ],
       "images": [],
-      "sizes": ["P", "M", "G", "GG"],
-      "colors": ["Nude"],
-      "description": "Saia midi plissada com movimento e elegância.",
+      "tags": [
+        "promocoes"
+      ],
+      "id": 1602,
+      "sizeGuide": "Numeração padrão brasileira.",
+      "description": "Alfaiataria moderna com visual elegante e confortável.",
+      "category": "calcas"
+    },
+    {
+      "salePrice": null,
       "details": "Leve e confortável. Combina com blusas lisas.",
+      "price": 149.9,
+      "name": "Saia Midi Plissada Nude",
+      "slug": "saia-midi-plissada-nude",
+      "colors": [
+        "Nude"
+      ],
+      "inStock": true,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG"
+      ],
+      "images": [],
+      "tags": [
+        "novidades"
+      ],
+      "id": 1701,
       "sizeGuide": "P(36-38), M(40-42), G(44), GG(46).",
-      "tags": ["novidades"],
-      "inStock": true
+      "description": "Saia midi plissada com movimento e elegância.",
+      "category": "saias"
     },
     {
-      "id": 1702,
-      "slug": "saia-curta-jeans",
-      "name": "Saia Curta Jeans",
-      "category": "saias",
-      "price": 119.9,
       "salePrice": 99.9,
-      "images": [],
-      "sizes": ["36", "38", "40", "42", "44"],
-      "colors": ["Jeans"],
-      "description": "Saia jeans curta, clássica e fácil de combinar.",
       "details": "Versátil para looks do dia a dia.",
+      "price": 119.9,
+      "name": "Saia Curta Jeans",
+      "slug": "saia-curta-jeans",
+      "colors": [
+        "Jeans"
+      ],
+      "inStock": true,
+      "sizes": [
+        "36",
+        "38",
+        "40",
+        "42",
+        "44"
+      ],
+      "images": [],
+      "tags": [
+        "promocoes",
+        "mais_vendidos"
+      ],
+      "id": 1702,
       "sizeGuide": "Numeração padrão brasileira.",
-      "tags": ["promocoes", "mais_vendidos"],
-      "inStock": true
+      "description": "Saia jeans curta, clássica e fácil de combinar.",
+      "category": "saias"
     },
-
     {
-      "id": 1801,
-      "slug": "macacao-pantalona-preto",
-      "name": "Macacão Pantalona Preto",
-      "category": "macacao",
-      "price": 289.9,
       "salePrice": 259.9,
-      "images": [],
-      "sizes": ["P", "M", "G", "GG"],
-      "colors": ["Preto"],
-      "description": "Macacão pantalona elegante, perfeito para ocasiões especiais.",
       "details": "Modelagem com caimento leve. Look completo em uma peça.",
+      "price": 289.9,
+      "name": "Macacão Pantalona Preto",
+      "slug": "macacao-pantalona-preto",
+      "colors": [
+        "Preto"
+      ],
+      "inStock": true,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG"
+      ],
+      "images": [],
+      "tags": [
+        "promocoes",
+        "mais_vendidos"
+      ],
+      "id": 1801,
       "sizeGuide": "P(36-38), M(40-42), G(44), GG(46).",
-      "tags": ["promocoes", "mais_vendidos"],
-      "inStock": true
+      "description": "Macacão pantalona elegante, perfeito para ocasiões especiais.",
+      "category": "macacao"
     },
     {
-      "id": 1802,
-      "slug": "macacao-curto-verde",
-      "name": "Macacão Curto Verde",
-      "category": "macacao",
-      "price": 199.9,
       "salePrice": null,
-      "images": [],
-      "sizes": ["P", "M", "G", "GG"],
-      "colors": ["Verde"],
-      "description": "Macacão curto confortável e estiloso para dias quentes.",
       "details": "Ótimo para passeios. Combine com tênis ou sandália.",
+      "price": 199.9,
+      "name": "Macacão Curto Verde",
+      "slug": "macacao-curto-verde",
+      "colors": [
+        "Verde"
+      ],
+      "inStock": true,
+      "sizes": [
+        "P",
+        "M",
+        "G",
+        "GG"
+      ],
+      "images": [],
+      "tags": [
+        "novidades"
+      ],
+      "id": 1802,
       "sizeGuide": "P(36-38), M(40-42), G(44), GG(46).",
-      "tags": ["novidades"],
-      "inStock": true
+      "description": "Macacão curto confortável e estiloso para dias quentes.",
+      "category": "macacao"
     }
   ]
 }
