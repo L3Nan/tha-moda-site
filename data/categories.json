@@ -1,0 +1,5 @@
+[
+  { "id": 1, "name": "Blusas", "slug": "blusas" },
+  { "id": 2, "name": "Vestidos", "slug": "vestidos" },
+  { "id": 3, "name": "Calças", "slug": "calcas" }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "slug": "blusa-rosa",
+    "name": "Blusa Rosa",
+    "category": "blusas",
+    "price": 79.90,
+    "salePrice": null,
+    "images": ["/assets/blusa.jpg"],
+    "sizes": ["P","M","G"],
+    "colors": ["Rosa","Preto"],
+    "description": "Blusa feminina confortável e estilosa.",
+    "details": "Tecido leve, ótimo caimento.",
+    "tags": ["novidades"],
+    "inStock": true
+  }
+]
