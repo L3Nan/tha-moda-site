@@ -93,6 +93,9 @@ async function initLoja(){
   const products = await loadProducts();
   const categories = await loadCategories();
 
+  // Renderizar vitrine com produtos em destaque
+  renderProductsSection("gridVitrine", products.slice(0, 12)); // Mostra os primeiros 12 produtos como vitrine
+
   const selCat = document.getElementById("filterCategory");
   const selSize = document.getElementById("filterSize");
   const selColor = document.getElementById("filterColor");
@@ -337,7 +340,7 @@ function productCard(p){
     <article class="card">
       <a href="./produto.html?slug=${encodeURIComponent(p.slug)}">
         <div class="img-box">
-          ${img ? `<img src="${img}" alt="${escapeHtml(p.name)}">` : ``}
+          ${img ? `<img src="${img}" alt="${escapeHtml(p.name)}">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg-soft);color:var(--text-2);font-size:14px;">📦 Produto</div>`}
         </div>
       </a>
       <div class="card-body">
