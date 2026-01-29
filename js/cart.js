@@ -1,5 +1,5 @@
 const CART_KEY = "cart_v1";
-const WHATSAPP_NUMBER = "55SEUNUMEROAQUI"; // <-- TROQUE AQUI (ex: 5531999999999)
+const WHATSAPP_NUMBER = "5511999999999"; // <-- TROQUE AQUI PELO SEU NÚMERO
 
 export function cartGet(){
   return JSON.parse(localStorage.getItem(CART_KEY)) || [];
@@ -59,27 +59,35 @@ export function cartClear(){
   cartSave([]);
 }
 
-export function cartWhatsAppMessage({cep="", payment="", note=""} = {}){
+export function cartWhatsAppMessage({ clientName="", clientCity="", deliveryType="", payment="", note="" } = {}){
   const cart = cartGet();
-  let msg = "Olá! Quero finalizar meu pedido:%0A";
+  let lines = [];
+  lines.push("Oi! Quero fechar esse pedido na THA MODA 🛍️");
+  lines.push("");
 
   let total = 0;
-  cart.forEach((i, idx) => {
-    const line = `${idx+1}) ${i.name} | Cor: ${i.color} | Tam: ${i.size} | Qtde: ${i.quantity} | ${formatMoney(i.unitPrice)}%0A`;
-    msg += line;
-    total += i.unitPrice * i.quantity;
+  cart.forEach((i) => {
+    const subtotal = i.unitPrice * i.quantity;
+    lines.push(`*${i.name}* — ${i.color}/${i.size}`);
+    lines.push(`Qtd: ${i.quantity} | Unit: ${formatMoney(i.unitPrice)} | Sub: ${formatMoney(subtotal)}`);
+    lines.push("");
+    total += subtotal;
   });
 
-  msg += `%0A%0ATotal: ${formatMoney(total)}%0A`;
+  lines.push(`*Total: ${formatMoney(total)}*`);
+  lines.push("");
 
-  if(cep) msg += `CEP: ${encodeURIComponent(cep)}%0A`;
-  if(payment) msg += `Pagamento: ${encodeURIComponent(payment)}%0A`;
-  if(note) msg += `Obs: ${encodeURIComponent(note)}%0A`;
+  if(clientName) lines.push(`*Nome:* ${clientName}`);
+  if(clientCity) lines.push(`*Bairro/Cidade:* ${clientCity}`);
+  if(deliveryType) lines.push(`*Entrega/Retirada:* ${deliveryType}`);
+  if(payment) lines.push(`*Pagamento:* ${payment}`);
+  if(note) lines.push(`*Obs:* ${note}`);
 
-  return msg;
+  return encodeURIComponent(lines.join("\n"));
 }
 
 export function openWhatsApp(message){
+  // message is already encoded
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
   window.open(url, "_blank");
 }

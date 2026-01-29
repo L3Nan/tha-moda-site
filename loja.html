@@ -21,56 +21,12 @@
       <a class="pill" href="./carrinho.html">Carrinho <span class="badge" id="cartCount">0</span></a>
     </div>
   </div>
+  <nav id="categoryBar" class="category-bar" aria-label="Categorias"></nav>
 </header>
 
 <main class="container">
   <section class="section">
-    <h2 class="section-title">Vitrine</h2>
-    <div class="grid" id="gridVitrine"></div>
-  </section>
-
-  <section class="section">
     <h1 class="section-title">Loja</h1>
-    <p class="muted">Filtre por categoria, tamanho e cor.</p>
-
-    <div id="categoryBar" class="category-bar" aria-label="Categorias"></div>
-
-    <div class="card" style="margin-top:14px">
-      <div class="card-body">
-        <div class="form-row">
-          <div class="field">
-            <label>Categoria</label>
-            <select id="filterCategory"></select>
-          </div>
-          <div class="field">
-            <label>Tamanho</label>
-            <select id="filterSize"></select>
-          </div>
-          <div class="field">
-            <label>Cor</label>
-            <select id="filterColor"></select>
-          </div>
-          <div class="field">
-            <label>Ordenar</label>
-            <select id="filterSort">
-              <option value="">Padrão</option>
-              <option value="price-asc">Menor preço</option>
-              <option value="price-desc">Maior preço</option>
-              <option value="sale">Promoções primeiro</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Buscar</label>
-            <input id="filterSearch" placeholder="Ex: vestido, blusa...">
-          </div>
-          <div class="field" style="display:flex;align-items:flex-end;gap:10px">
-            <label style="display:flex;gap:10px;align-items:center;font-weight:900">
-              <input id="filterSale" type="checkbox" style="width:auto"> Somente promoções
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <div class="section">
       <div class="grid" id="gridLoja"></div>

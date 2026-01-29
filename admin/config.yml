@@ -19,19 +19,18 @@ collections:
             widget: "list"
             summary: "{{fields.name}}"
             fields:
-              - { name: "id", label: "ID", widget: "number" }
+              - { name: "id", label: "ID", widget: "string" }
               - { name: "slug", label: "Slug (url)", widget: "string" }
               - { name: "name", label: "Nome", widget: "string" }
-              - { name: "category", label: "Categoria (slug)", widget: "string" }
+              - { name: "category", label: "Categoria", widget: "relation", collection: "conteudo", file: "categories", search_fields: ["categories.*.name"], value_field: "categories.*.slug", display_fields: ["categories.*.name"] }
               - { name: "price", label: "Preço", widget: "number", value_type: "float" }
               - { name: "salePrice", label: "Preço promocional", widget: "number", value_type: "float", required: false }
               - { name: "images", label: "Imagens", widget: "list", field: { label: "Imagem", name: "image", widget: "image" } }
-              - { name: "sizes", label: "Tamanhos", widget: "list" }
-              - { name: "colors", label: "Cores", widget: "list" }
+              - { name: "sizes", label: "Tamanhos", widget: "list", required: false }
+              - { name: "colors", label: "Cores", widget: "list", required: false }
               - { name: "description", label: "Descrição", widget: "text" }
               - { name: "details", label: "Detalhes", widget: "text", required: false }
-              - { name: "sizeGuide", label: "Tabela de medidas (texto)", widget: "text", required: false }
-              - { name: "tags", label: "Tags", widget: "list", required: false }
+              - { name: "tags", label: "Tags", widget: "select", multiple: true, options: ["novidades", "mais_vendidos", "promocoes"], required: false }
               - { name: "inStock", label: "Em estoque", widget: "boolean", default: true }
 
       - name: "categories"
@@ -44,9 +43,6 @@ collections:
             widget: "list"
             summary: "{{fields.name}}"
             fields:
-              - { name: "id", label: "ID", widget: "number" }
+              - { name: "id", label: "ID", widget: "string" }
               - { name: "name", label: "Nome", widget: "string" }
               - { name: "slug", label: "Slug (url)", widget: "string" }
-              - { name: "image", label: "Imagem", widget: "image", required: false }
-              - { name: "description", label: "Descrição", widget: "text", required: false }
-              

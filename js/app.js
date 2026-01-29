@@ -1,3 +1,17 @@
+// Helpers para barra de categorias especiais
+function normText(s){
+  return String(s || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function setUrlParam(key, value){
+  const url = new URL(window.location.href);
+  if(value) url.searchParams.set(key, value);
+  else url.searchParams.delete(key);
+  history.replaceState({}, "", url.toString());
+}
 import { loadProducts, loadCategories, brl, getParam } from "./data.js";
 import {
   cartAdd, cartCount, cartGet, cartRemove, cartUpdateQuantity, cartClear,
@@ -91,23 +105,12 @@ function renderProductsSection(targetId, list){
 /* ================= LOJA ================= */
 async function initLoja(){
   const products = await loadProducts();
-  const categories = await loadCategories();
-
-  // Renderizar vitrine com produtos em destaque
-  renderProductsSection("gridVitrine", products.slice(0, 12)); // Mostra os primeiros 12 produtos como vitrine
 
   const categoryBar = document.getElementById("categoryBar");
-  const selCat = document.getElementById("filterCategory");
-  const selSize = document.getElementById("filterSize");
-  const selColor = document.getElementById("filterColor");
-  const onlySale = document.getElementById("filterSale");
-  const search = document.getElementById("filterSearch");
-  const sort = document.getElementById("filterSort");
 
   // lê cat e search da URL (se vier do overlay que manda ?search=...)
   const initialCat = getParam("cat") || "";
   const initialSearch = getParam("search") || "";
-  if(initialSearch && search) search.value = initialSearch;
 
   // categorias "de UI" (não mexe no categories.json)
   const barCats = [
@@ -128,11 +131,14 @@ async function initLoja(){
 
   function renderCategoryBar(){
     if(!categoryBar) return;
-
-    categoryBar.innerHTML = barCats.map(c => `
+    categoryBar.innerHTML = barCats.map((c, idx) => `
       <button type="button"
-        class="category-btn ${c.slug === activeCat ? "is-active" : ""}"
-        data-cat="${c.slug}">
+        class="category-btn${c.slug === activeCat ? " is-active" : ""}"
+        data-cat="${c.slug}"
+        tabindex="0"
+        aria-pressed="${c.slug === activeCat ? "true" : "false"}"
+        aria-label="${c.label}"
+        >
         ${c.label}
       </button>
     `).join("");
@@ -140,11 +146,6 @@ async function initLoja(){
 
   function setActiveCat(slug){
     activeCat = slug;
-
-    // sincroniza o select quando for categoria "real"
-    // (para pulseiras-colares/tenis/sandalias deixamos select em branco)
-    const isReal = categories.some(c => c.slug === slug);
-    selCat.value = isReal ? slug : "";
 
     // atualiza URL
     setUrlParam("cat", slug);
@@ -159,24 +160,11 @@ async function initLoja(){
     render();
   }
 
-  // popula categorias
-  selCat.innerHTML = `<option value="">Todas</option>` + categories.map(c => `<option value="${c.slug}">${escapeHtml(c.name)}</option>`).join("");
-
-  // popula tamanhos e cores a partir dos produtos (união)
-  const allSizes = uniq(products.flatMap(p => p.sizes || [])).sort();
-  const allColors = uniq(products.flatMap(p => p.colors || [])).sort();
-
-  selSize.innerHTML = `<option value="">Todos</option>` + allSizes.map(s => `<option value="${s}">${s}</option>`).join("");
-  selColor.innerHTML = `<option value="">Todas</option>` + allColors.map(c => `<option value="${c}">${escapeHtml(c)}</option>`).join("");
-
   const render = () => {
     let list = [...products];
 
     const cat = activeCat; // usa a barra como principal
-    const size = selSize.value;
-    const color = selColor.value;
-    const sale = onlySale.checked;
-    const q = (search.value || "").trim().toLowerCase();
+    const q = (initialSearch || "").trim().toLowerCase();
 
     if(cat){
       if(cat === "pulseiras-colares"){
@@ -189,16 +177,7 @@ async function initLoja(){
         list = list.filter(p => p.category === cat);
       }
     }
-    if(size) list = list.filter(p => (p.sizes||[]).includes(size));
-    if(color) list = list.filter(p => (p.colors||[]).includes(color));
-    if(sale) list = list.filter(p => !!p.salePrice);
     if(q) list = list.filter(p => (p.name||"").toLowerCase().includes(q));
-
-    // sort
-    const s = sort.value;
-    if(s === "price-asc") list.sort((a,b) => priceOf(a)-priceOf(b));
-    if(s === "price-desc") list.sort((a,b) => priceOf(b)-priceOf(a));
-    if(s === "sale") list.sort((a,b) => Number(!!b.salePrice) - Number(!!a.salePrice));
 
     const grid = document.getElementById("gridLoja");
     if(!grid) return;
@@ -211,17 +190,6 @@ async function initLoja(){
     grid.innerHTML = list.map(p => productCard(p)).join("");
   };
 
-  [selCat, selSize, selColor, onlySale, sort].forEach(x => x.addEventListener("change", render));
-  search.addEventListener("input", render);
-
-  // se o usuário mexer no select manualmente, a barra acompanha
-  selCat.addEventListener("change", () => {
-    activeCat = selCat.value || "";
-    setUrlParam("cat", activeCat);
-    renderCategoryBar();
-    render();
-  });
-
   // primeira renderização (já respeita ?cat e ?search)
   renderCategoryBar();
 
@@ -230,6 +198,19 @@ async function initLoja(){
     const btn = e.target.closest("[data-cat]");
     if(!btn) return;
     setActiveCat(btn.dataset.cat || "");
+  });
+  // Navegação por teclado (setas esquerda/direita)
+  categoryBar?.addEventListener("keydown", (e) => {
+    if (!["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+    const buttons = Array.from(categoryBar.querySelectorAll(".category-btn"));
+    const current = document.activeElement;
+    const idx = buttons.indexOf(current);
+    if(idx === -1) return;
+    let nextIdx = e.key === "ArrowLeft" ? idx - 1 : idx + 1;
+    if(nextIdx < 0) nextIdx = 0;
+    if(nextIdx >= buttons.length) nextIdx = buttons.length - 1;
+    buttons[nextIdx].focus();
+    e.preventDefault();
   });
 
   render();
@@ -282,6 +263,23 @@ function bindProductDetail(p){
   const sizeWrap = document.getElementById("sizes");
   const qtyInput = document.getElementById("qtyInput");
   const btnAdd = document.getElementById("btnAddCart");
+  const btnNotify = document.getElementById("btnNotify");
+
+  // Handle gallery clicks
+  document.querySelectorAll(".thumb-btn").forEach(btn => {
+      btn.addEventListener("click", function(){
+          document.querySelectorAll(".thumb-btn").forEach(b => b.classList.remove("active"));
+          this.classList.add("active");
+          // image swap is inline in HTML for simplicity, or we can do it here
+      });
+  });
+
+  if(btnNotify){
+      btnNotify.addEventListener("click", () => {
+          const msg = `Oi! Quero saber quando volta o ${p.name}.`;
+          openWhatsApp(msg);
+      });
+  }
 
   colorWrap?.addEventListener("click", (e) => {
     const b = e.target.closest("[data-color]");
@@ -337,7 +335,9 @@ async function initCarrinho(){
   });
 
   document.getElementById("btnCheckout")?.addEventListener("click", () => {
-    const cep = document.getElementById("cep")?.value || "";
+    const clientName = document.getElementById("clientName")?.value || "";
+    const clientCity = document.getElementById("clientCity")?.value || "";
+    const deliveryType = document.getElementById("deliveryType")?.value || "";
     const payment = document.getElementById("payment")?.value || "";
     const note = document.getElementById("note")?.value || "";
 
@@ -346,8 +346,13 @@ async function initCarrinho(){
       alert("Carrinho vazio.");
       return;
     }
+    
+    if(!clientName){
+        alert("Por favor, preencha seu nome.");
+        return;
+    }
 
-    const msg = cartWhatsAppMessage({ cep, payment, note });
+    const msg = cartWhatsAppMessage({ clientName, clientCity, deliveryType, payment, note });
     openWhatsApp(msg);
   });
 }
@@ -418,17 +423,24 @@ function productCard(p){
   const hasSale = p.salePrice != null;
 
   const img = (p.images && p.images[0]) ? p.images[0] : "";
-  const badge = hasSale ? `<div class="tag">Promo</div>` : `<div class="tag">Produto</div>`;
+  
+  let badgesHtml = "";
+  if(hasSale) badgesHtml += `<div class="tag tag-promocao">Promo</div>`;
+  if((p.tags||[]).includes("novidades")) badgesHtml += `<div class="tag tag-novidades">Novidade</div>`;
+  if((p.tags||[]).includes("mais_vendidos")) badgesHtml += `<div class="tag tag-mais-vendidos">Mais Vendido</div>`;
+  if(!p.inStock) badgesHtml += `<div class="tag" style="background:#000;color:#fff">Esgotado</div>`;
+
+  // if(!badgesHtml) badgesHtml = `<div class="tag">Produto</div>`; // REMOVIDO para não poluir
 
   return `
-    <article class="card">
+    <article class="card" style="${!p.inStock ? "opacity:0.7" : ""}">
       <a href="./produto.html?slug=${encodeURIComponent(p.slug)}">
         <div class="img-box">
           ${img ? `<img src="${img}" alt="${escapeHtml(p.name)}">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg-soft);color:var(--text-2);font-size:14px;">📦 Produto</div>`}
         </div>
       </a>
       <div class="card-body">
-        ${badge}
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">${badgesHtml}</div>
         <div class="card-title">${escapeHtml(p.name)}</div>
         <div>
           <span class="price">${brl(price)}</span>
@@ -436,7 +448,10 @@ function productCard(p){
         </div>
         <div class="muted" style="margin-top:6px">${escapeHtml((p.category||"").toUpperCase())}</div>
         <div style="margin-top:10px">
-          <a class="btn btn-primary btn-wide" href="./produto.html?slug=${encodeURIComponent(p.slug)}">Ver produto</a>
+          ${p.inStock 
+            ? `<a class="btn btn-primary btn-wide" href="./produto.html?slug=${encodeURIComponent(p.slug)}">Ver detalhes</a>`
+            : `<a class="btn btn-ghost btn-wide" href="./produto.html?slug=${encodeURIComponent(p.slug)}">Ver detalhes (Esgotado)</a>`
+          }
         </div>
       </div>
     </article>
@@ -447,13 +462,25 @@ function renderProductDetail(p){
   const img = (p.images && p.images[0]) ? p.images[0] : "";
   const hasSale = p.salePrice != null;
 
+  // Gallery thumbnails
+  const thumbs = (p.images || []).map((src, i) => `
+    <button type="button" class="thumb-btn ${i===0?'active':''}" onclick="document.getElementById('mainImg').src='${src}'" style="border:none;background:none;cursor:pointer;padding:0">
+      <div style="width:60px;height:60px;border-radius:8px;overflow:hidden;border:1px solid var(--border)">
+        <img src="${src}" style="width:100%;height:100%;object-fit:cover">
+      </div>
+    </button>
+  `).join("");
+
   return `
     <div class="product">
       <div class="product-media">
         <div class="card" style="overflow:hidden">
           <div class="img-box" style="aspect-ratio: 4/4;">
-            ${img ? `<img src="${img}" alt="${escapeHtml(p.name)}">` : ``}
+            ${img ? `<img id="mainImg" src="${img}" alt="${escapeHtml(p.name)}">` : ``}
           </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;overflow-x:auto;padding-bottom:4px">
+          ${thumbs}
         </div>
 
         <div class="section">
@@ -463,7 +490,18 @@ function renderProductDetail(p){
       </div>
 
       <div class="product-info">
-        <div class="tag">${hasSale ? "Promoção" : "Produto"}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+            ${hasSale ? `<div class="tag tag-promocao">Promo</div>` : ""}
+          ${(p.tags||[]).map(t => {
+             let cls = "";
+             let label = t.replace("_"," ");
+             if(t === "novidades") { cls = "tag-novidades"; label = "Novidade"; }
+             if(t === "mais_vendidos") { cls = "tag-mais-vendidos"; label = "Mais Vendido"; }
+             if(t === "promocoes") { cls = "tag-promocao"; label = "Promo"; }
+             return `<div class="tag ${cls}">${label}</div>`;
+          }).join("")}
+        </div>
+        
         <h2 class="section-title" style="margin-top:10px">${escapeHtml(p.name)}</h2>
         <div style="display:flex;align-items:center;gap:10px">
           <div class="price" style="font-size:22px">${brl(priceOf(p))}</div>
@@ -472,30 +510,40 @@ function renderProductDetail(p){
 
         <div class="hr"></div>
 
-        <div>
-          <label>Cor</label>
-          <div class="chips" id="colors">
-            ${(p.colors||[]).map(c => `<button class="chip" type="button" aria-pressed="false" data-color="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join("")}
-          </div>
-        </div>
+        ${p.inStock ? `
+            <div>
+              <label>Cor</label>
+              <div class="chips" id="colors">
+                ${(p.colors||[]).map(c => `<button class="chip" type="button" aria-pressed="false" data-color="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join("")}
+              </div>
+            </div>
 
-        <div style="margin-top:14px">
-          <label>Tamanho</label>
-          <div class="chips" id="sizes">
-            ${(p.sizes||[]).map(s => `<button class="chip" type="button" aria-pressed="false" data-size="${escapeHtml(s)}">${escapeHtml(s)}</button>`).join("")}
-          </div>
-        </div>
+            <div style="margin-top:14px">
+              <label>Tamanho</label>
+              <div class="chips" id="sizes">
+                ${(p.sizes||[]).map(s => `<button class="chip" type="button" aria-pressed="false" data-size="${escapeHtml(s)}">${escapeHtml(s)}</button>`).join("")}
+              </div>
+            </div>
 
-        <div class="qty">
-          <button id="qtyMinus" type="button">-</button>
-          <input id="qtyInput" value="1" inputmode="numeric">
-          <button id="qtyPlus" type="button">+</button>
-        </div>
+            <div class="qty">
+              <button id="qtyMinus" type="button">-</button>
+              <input id="qtyInput" value="1" inputmode="numeric">
+              <button id="qtyPlus" type="button">+</button>
+            </div>
 
-        <div style="margin-top:14px;display:grid;grid-template-columns:1fr;gap:10px">
-          <button id="btnAddCart" class="btn btn-primary btn-wide" type="button">Adicionar ao carrinho</button>
-          <a class="btn btn-ghost btn-wide" href="./carrinho.html">Ir para o carrinho</a>
-        </div>
+            <div style="margin-top:14px;display:grid;grid-template-columns:1fr;gap:10px">
+              <button id="btnAddCart" class="btn btn-primary btn-wide" type="button">Adicionar ao carrinho</button>
+              <a class="btn btn-ghost btn-wide" href="./carrinho.html">Ir para o carrinho</a>
+            </div>
+        ` : `
+            <div class="notice" style="background:var(--bg-soft);border:1px solid var(--border);color:var(--text-1)">
+                <strong>Este produto está esgotado.</strong><br>
+                Entre em contato para saber quando chega reposição.
+            </div>
+            <button id="btnNotify" class="btn btn-primary btn-wide" type="button" style="margin-top:10px">
+                Chamar no WhatsApp
+            </button>
+        `}
 
         <div class="section">
           <h3 class="section-title" style="font-size:18px">Descrição</h3>
@@ -505,13 +553,6 @@ function renderProductDetail(p){
         <div class="section">
           <h3 class="section-title" style="font-size:18px">Detalhes</h3>
           <div class="notice">${escapeHtml(p.details || "")}</div>
-        </div>
-
-        <div class="section">
-          <div class="notice">
-            <strong>Status:</strong>
-            ${p.inStock ? `<span style="color:var(--success);font-weight:900">Em estoque</span>` : `<span style="color:var(--danger);font-weight:900">Esgotado</span>`}
-          </div>
         </div>
       </div>
     </div>

@@ -39,17 +39,26 @@
 
       <div class="form-row">
         <div class="field">
-          <label>CEP (opcional)</label>
-          <input id="cep" placeholder="00000-000">
+          <label>Seu Nome</label>
+          <input id="clientName" placeholder="Seu nome completo">
         </div>
         <div class="field">
-          <label>Pagamento (opcional)</label>
+          <label>Cidade / Bairro</label>
+          <input id="clientCity" placeholder="Ex: Centro">
+        </div>
+        <div class="field">
+          <label>Forma de Entrega</label>
+          <select id="deliveryType">
+            <option value="Entrega">Entrega</option>
+            <option value="Retirar">Retirar</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Pagamento</label>
           <select id="payment">
-            <option value="">Selecione</option>
-            <option>Pix</option>
-            <option>Cartão</option>
-            <option>Dinheiro</option>
-            <option>Link de pagamento</option>
+            <option value="Pix">Pix</option>
+            <option value="Cartão">Cartão</option>
+            <option value="Dinheiro">Dinheiro</option>
           </select>
         </div>
         <div class="field-12">

@@ -1,13 +1,13 @@
 {
   "categories": [
-    { "id": 1, "name": "Brincos", "slug": "brincos" },
-    { "id": 2, "name": "Pulseiras", "slug": "pulseiras" },
-    { "id": 3, "name": "Colares", "slug": "colares" },
-    { "id": 4, "name": "Sapatos", "slug": "sapatos" },
-    { "id": 5, "name": "Vestidos", "slug": "vestidos" },
-    { "id": 6, "name": "Blusas", "slug": "blusas" },
-    { "id": 7, "name": "Calças", "slug": "calcas" },
-    { "id": 8, "name": "Saias", "slug": "saias" },
-    { "id": 9, "name": "Macacão", "slug": "macacao" }
+    { "id": "c1", "name": "Brincos", "slug": "brincos" },
+    { "id": "c2", "name": "Pulseiras", "slug": "pulseiras" },
+    { "id": "c3", "name": "Colares", "slug": "colares" },
+    { "id": "c4", "name": "Sapatos", "slug": "sapatos" },
+    { "id": "c5", "name": "Vestidos", "slug": "vestidos" },
+    { "id": "c6", "name": "Blusas", "slug": "blusas" },
+    { "id": "c7", "name": "Calças", "slug": "calcas" },
+    { "id": "c8", "name": "Saias", "slug": "saias" },
+    { "id": "c9", "name": "Macacão", "slug": "macacao" }
   ]
 }
