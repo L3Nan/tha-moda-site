@@ -20,6 +20,26 @@ export async function loadCategories(){
   }
 }
 
+export async function loadSettings(){
+  try {
+    const res = await fetch("./data/settings.json");
+    return await res.json();
+  } catch(e) {
+    console.error("Erro ao carregar configurações:", e);
+    return {};
+  }
+}
+
+export async function loadShipping(){
+  try {
+    const res = await fetch("./data/shipping.json");
+    return await res.json();
+  } catch(e) {
+    console.error("Erro ao carregar frete:", e);
+    return {};
+  }
+}
+
 export function brl(value){
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',

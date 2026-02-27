@@ -1,3 +1,4 @@
+local_backend: true
 backend:
   name: git-gateway
   branch: main
@@ -23,6 +24,7 @@ collections:
               - { name: "slug", label: "Slug (url)", widget: "string" }
               - { name: "name", label: "Nome", widget: "string" }
               - { name: "category", label: "Categoria", widget: "relation", collection: "conteudo", file: "categories", search_fields: ["categories.*.name"], value_field: "categories.*.slug", display_fields: ["categories.*.name"] }
+              - { name: "subcategory", label: "Subcategoria (acessórios)", widget: "select", required: false, options: ["brincos", "pulseiras", "colares"] }
               - { name: "price", label: "Preço", widget: "number", value_type: "float" }
               - { name: "salePrice", label: "Preço promocional", widget: "number", value_type: "float", required: false }
               - { name: "images", label: "Imagens", widget: "list", field: { label: "Imagem", name: "image", widget: "image" } }
@@ -46,3 +48,63 @@ collections:
               - { name: "id", label: "ID", widget: "string" }
               - { name: "name", label: "Nome", widget: "string" }
               - { name: "slug", label: "Slug (url)", widget: "string" }
+      - name: "settings"
+        label: "Configurações do Site"
+        file: "data/settings.json"
+        format: "json"
+        fields:
+          - { name: "storeName", label: "Nome da Loja", widget: "string" }
+          - { name: "logoUrl", label: "Logo (PNG/SVG c/ fundo transparente)", widget: "image", allow_multiple: false, required: false }
+          - { name: "whatsAppNumber", label: "WhatsApp (DDI+DDD+Número)", widget: "string", hint: "Ex.: 5511988887777" }
+          - name: "banners"
+            label: "Banners (opcional)"
+            widget: "list"
+            required: false
+            field: { label: "Imagem", name: "image", widget: "image" }
+      - name: "shipping"
+        label: "Frete"
+        file: "data/shipping.json"
+        format: "json"
+        fields:
+          - name: "spRegions"
+            label: "Taxas fixas SP Capital"
+            widget: "object"
+            fields:
+              - { name: "norte", label: "Zona Norte (R$)", widget: "number", value_type: "float" }
+              - { name: "sul", label: "Zona Sul (R$)", widget: "number", value_type: "float" }
+              - { name: "leste", label: "Zona Leste (R$)", widget: "number", value_type: "float" }
+              - { name: "oeste", label: "Zona Oeste (R$)", widget: "number", value_type: "float" }
+          - name: "cepMapping"
+            label: "Mapeamento de CEP → Região (prefixos)"
+            widget: "list"
+            summary: "CEP começa com {{fields.prefix}} → {{fields.region}}"
+            fields:
+              - { name: "prefix", label: "Prefixo de CEP (2–3 dígitos)", widget: "string" }
+              - { name: "region", label: "Região", widget: "select", options: ["norte","sul","leste","oeste"] }
+          - name: "correios"
+            label: "Correios"
+            widget: "object"
+            fields:
+              - { name: "enabled", label: "Ativar Correios", widget: "boolean", default: true }
+              - { name: "pac", label: "Valor PAC (R$)", widget: "number", value_type: "float", required: false }
+              - { name: "sedex", label: "Valor SEDEX (R$)", widget: "number", value_type: "float", required: false }
+          - { name: "freeShippingThreshold", label: "Frete Grátis a partir de (R$)", widget: "number", value_type: "float", required: false }
+      - name: "orders"
+        label: "Pedidos (registro manual)"
+        file: "data/orders.json"
+        format: "json"
+        fields:
+          - name: "orders"
+            label: "Lista de pedidos"
+            widget: "list"
+            summary: "Pedido #{{fields.id}} — {{fields.customerName}} — {{fields.status}}"
+            fields:
+              - { name: "id", label: "ID", widget: "string" }
+              - { name: "createdAt", label: "Criado em", widget: "datetime" }
+              - { name: "customerName", label: "Cliente", widget: "string" }
+              - { name: "address", label: "Endereço", widget: "string", required: false }
+              - { name: "cep", label: "CEP", widget: "string", required: false }
+              - { name: "items", label: "Itens (texto livre)", widget: "text" }
+              - { name: "total", label: "Total (R$)", widget: "number", value_type: "float" }
+              - { name: "shipping", label: "Frete (R$)", widget: "number", value_type: "float", required: false }
+              - { name: "status", label: "Status", widget: "select", options: ["Novo","Pago","Enviado","Entregue","Cancelado"], default: "Novo" }

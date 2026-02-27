@@ -1,0 +1,24 @@
+{
+  "spRegions": {
+    "norte": 10.0,
+    "sul": 12.0,
+    "leste": 9.5,
+    "oeste": 11.0
+  },
+  "cepMapping": [
+    { "prefix": "02", "region": "norte" },
+    { "prefix": "03", "region": "norte" },
+    { "prefix": "04", "region": "norte" },
+    { "prefix": "05", "region": "oeste" },
+    { "prefix": "06", "region": "oeste" },
+    { "prefix": "07", "region": "leste" },
+    { "prefix": "08", "region": "leste" },
+    { "prefix": "01", "region": "sul" }
+  ],
+  "correios": {
+    "enabled": true,
+    "pac": 29.9,
+    "sedex": 44.9
+  },
+  "freeShippingThreshold": 0
+}

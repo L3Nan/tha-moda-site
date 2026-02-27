@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tha Moda & Acessórios</title>
+  <title>Tha Modas e Acessórios</title>
 
   <!-- Redirect de tokens do Netlify Identity para /admin -->
   <script>
@@ -23,7 +23,7 @@
 <header>
   <div class="header-inner">
     <a class="brand" href="./index.html">
-      <span class="dot"></span><span>Tha Moda & Acessórios</span>
+      <span class="dot"></span><span>Tha Modas e Acessórios</span>
     </a>
 
     <nav class="nav">
@@ -33,7 +33,7 @@
     </nav>
 
     <div class="actions">
-      <button class="pill" id="searchToggle">
+      <button class="pill" id="searchToggle" type="button" aria-label="Buscar">
         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
         </svg>
@@ -41,7 +41,6 @@
       <a class="pill" href="./carrinho.html">
         Carrinho <span class="badge" id="cartCount">0</span>
       </a>
-      <a class="btn btn-primary" href="./loja.html">Comprar</a>
     </div>
   </div>
 </header>
@@ -49,6 +48,7 @@
 <div class="search-overlay" id="searchOverlay">
   <div class="search-modal">
     <input type="text" id="searchInput" placeholder="Buscar produtos..." autocomplete="off">
+    <button class="search-close" id="searchClose" aria-label="Fechar">×</button>
   </div>
 </div>
 
@@ -68,7 +68,7 @@
   </section>
 
   <section class="section">
-    <h2 class="section-title">Por que escolher a Tha Moda?</h2>
+    <h2 class="section-title">Por que escolher a Tha Modas?</h2>
     <div class="grid">
       <div class="card" style="grid-column: span 3;">
         <div class="card-body" style="text-align:center">
@@ -156,7 +156,7 @@
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-col">
-      <strong style="color:var(--brand)">Tha Moda & Acessórios</strong>
+      <strong style="color:var(--brand)">Tha Modas e Acessórios</strong>
       <div class="muted">Moda feminina com estilo e atendimento direto.</div>
     </div>
     <div class="footer-col">

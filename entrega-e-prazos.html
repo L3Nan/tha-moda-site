@@ -3,24 +3,37 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Entrega e Prazos — Tha Moda</title>
+  <title>Entrega e Prazos — Tha Modas e Acessórios</title>
   <link rel="stylesheet" href="./css/style.css">
+  <script type="module" src="./js/app.js"></script>
 </head>
 <body>
 
 <header>
   <div class="header-inner">
-    <a class="brand" href="./index.html"><span class="dot"></span><span>Tha Moda & Acessórios</span></a>
+    <a class="brand" href="./index.html"><span class="dot"></span><span>Tha Modas e Acessórios</span></a>
     <nav class="nav">
       <a href="./loja.html">Loja</a>
       <a href="./sobre.html">Sobre</a>
       <a href="./contato.html">Contato</a>
     </nav>
     <div class="actions">
+      <button class="pill" id="searchToggle" type="button" aria-label="Buscar">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 0 0114 0z"></path>
+        </svg>
+      </button>
       <a class="pill" href="./carrinho.html">Carrinho <span class="badge" id="cartCount">0</span></a>
     </div>
   </div>
 </header>
+
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-modal">
+    <input type="text" id="searchInput" placeholder="Buscar produtos..." autocomplete="off">
+    <button class="search-close" id="searchClose" aria-label="Fechar">×</button>
+  </div>
+</div>
 
 <main class="container">
   <h1 class="section-title">Entrega e Prazos</h1>
@@ -28,9 +41,10 @@
   <section class="section">
     <h2 class="section-title" style="font-size:20px">Formas de Entrega</h2>
     <div class="notice">
-      <p><strong>Correios PAC:</strong> Entrega em até 15 dias úteis após postagem.</p>
-      <p><strong>Correios SEDEX:</strong> Entrega em até 3 dias úteis após postagem.</p>
-      <p><strong>Transportadora:</strong> Para regiões metropolitanas, entrega em até 5 dias úteis.</p>
+      <p><strong>Entrega SP Capital:</strong> taxa fixa por região (Norte, Sul, Leste e Oeste).</p>
+      <p><strong>Correios PAC:</strong> indicado para regiões mais distantes, entrega em até 15 dias úteis após postagem.</p>
+      <p><strong>Correios SEDEX:</strong> indicado para regiões mais distantes, entrega em até 3 dias úteis após postagem.</p>
+      <p><strong>Retirada:</strong> opção disponível no checkout.</p>
     </div>
   </section>
 
@@ -46,9 +60,9 @@
   <section class="section">
     <h2 class="section-title" style="font-size:20px">Custos de Entrega</h2>
     <div class="notice">
-      <p>Os custos são calculados com base no peso, volume e destino.</p>
-      <p>Compras acima de R$ 150,00 têm frete grátis.</p>
-      <p>Para calcular o frete exato, adicione os produtos ao carrinho.</p>
+      <p>O frete é definido pelo seu CEP no checkout.</p>
+      <p>Dentro da capital, a taxa é fixa conforme a zona.</p>
+      <p>Fora da capital, o checkout oferece PAC/SEDEX dos Correios.</p>
     </div>
   </section>
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Carrinho — Tha Moda</title>
+  <title>Carrinho — Tha Modas e Acessórios</title>
   <link rel="stylesheet" href="./css/style.css">
   <script type="module" src="./js/app.js"></script>
 </head>
@@ -11,67 +11,99 @@
 
 <header>
   <div class="header-inner">
-    <a class="brand" href="./index.html"><span class="dot"></span><span>Tha Moda & Acessórios</span></a>
+    <a class="brand" href="./index.html"><span class="dot"></span><span>Tha Modas e Acessórios</span></a>
     <nav class="nav">
       <a href="./loja.html">Loja</a>
       <a href="./sobre.html">Sobre</a>
       <a href="./contato.html">Contato</a>
     </nav>
     <div class="actions">
-      <span class="pill">Itens <span class="badge" id="cartCount">0</span></span>
+      <button class="pill" id="searchToggle" type="button" aria-label="Buscar">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </button>
+      <a class="pill" href="./carrinho.html">Carrinho <span class="badge" id="cartCount">0</span></a>
     </div>
   </div>
 </header>
 
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-modal">
+    <input type="text" id="searchInput" placeholder="Buscar produtos..." autocomplete="off">
+    <button class="search-close" id="searchClose" aria-label="Fechar">×</button>
+  </div>
+</div>
+
 <main class="container">
   <h1 class="section-title">Carrinho</h1>
 
-  <div class="grid" id="cartList"></div>
-
-  <div class="card" style="margin-top:14px">
-    <div class="card-body">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-        <div style="font-weight:900">Total:</div>
-        <div style="font-size:20px;font-weight:900" id="cartTotalValue">R$ 0,00</div>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="form-row">
-        <div class="field">
-          <label>Seu Nome</label>
-          <input id="clientName" placeholder="Seu nome completo">
-        </div>
-        <div class="field">
-          <label>Cidade / Bairro</label>
-          <input id="clientCity" placeholder="Ex: Centro">
-        </div>
-        <div class="field">
-          <label>Forma de Entrega</label>
-          <select id="deliveryType">
-            <option value="Entrega">Entrega</option>
-            <option value="Retirar">Retirar</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Pagamento</label>
-          <select id="payment">
-            <option value="Pix">Pix</option>
-            <option value="Cartão">Cartão</option>
-            <option value="Dinheiro">Dinheiro</option>
-          </select>
-        </div>
-        <div class="field-12">
-          <label>Observação (opcional)</label>
-          <textarea id="note" placeholder="Ex: se não tiver M, pode ser G..."></textarea>
-        </div>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px">
-        <button class="btn btn-primary btn-wide" id="btnCheckout">Finalizar no WhatsApp</button>
-        <button class="btn btn-ghost btn-wide" id="btnClearCart">Limpar carrinho</button>
-      </div>
+  <div class="cart-layout">
+    <div>
+      <div class="grid" id="cartList"></div>
     </div>
+    <aside>
+      <div class="card summary-card">
+        <div class="card-body">
+          <div class="summary-title">Resumo</div>
+          <div class="row">
+            <div>Subtotal</div>
+            <div id="cartTotalValue" style="font-weight:900">R$ 0,00</div>
+          </div>
+          <div class="row">
+            <div>Frete</div>
+            <div id="shippingFeeValue" style="font-weight:900">R$ 0,00</div>
+          </div>
+          <div class="row" style="margin-top:8px">
+            <div style="font-weight:900">Total</div>
+            <div id="cartTotalWithShipping" style="font-size:18px;font-weight:900">R$ 0,00</div>
+          </div>
+          <div class="muted" id="shippingInfo" style="margin-top:6px">Informe o CEP para calcular o frete.</div>
+
+          <div class="hr"></div>
+
+          <div class="form-row">
+            <div class="field-12">
+              <label>Seu Nome</label>
+              <input id="clientName" placeholder="Seu nome completo">
+            </div>
+            <div class="field">
+              <label>CEP</label>
+              <input id="clientCep" inputmode="numeric" placeholder="Ex: 01000-000">
+            </div>
+            <div class="field">
+              <label>Cidade / Bairro</label>
+              <input id="clientCity" placeholder="Ex: Centro">
+            </div>
+            <div class="field-12">
+              <label>Endereço (rua, número, complemento)</label>
+              <input id="clientAddress" placeholder="Ex: Rua Exemplo, 123 - Apto 45">
+            </div>
+            <div class="field">
+              <label>Entrega</label>
+              <select id="deliveryType"></select>
+            </div>
+            <div class="field">
+              <label>Pagamento</label>
+              <select id="payment">
+                <option value="Pix">Pix</option>
+                <option value="Cartão">Cartão</option>
+                <option value="Dinheiro">Dinheiro</option>
+              </select>
+            </div>
+            <div class="field-12">
+              <label>Observação (opcional)</label>
+              <textarea id="note" placeholder="Ex: se não tiver M, pode ser G..."></textarea>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px">
+            <button class="btn btn-primary btn-wide" id="btnCheckout">Finalizar no WhatsApp</button>
+            <button class="btn btn-ghost btn-wide" id="btnClearCart">Limpar carrinho</button>
+          </div>
+        </div>
+      </div>
+    </aside>
   </div>
 </main>
 

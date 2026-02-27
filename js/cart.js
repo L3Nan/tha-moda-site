@@ -1,5 +1,9 @@
 const CART_KEY = "cart_v1";
-const WHATSAPP_NUMBER = "5511999999999"; // <-- TROQUE AQUI PELO SEU NÚMERO
+let WHATSAPP_NUMBER = "5511999999999";
+
+export function setWhatsAppNumber(value){
+  if(value) WHATSAPP_NUMBER = String(value);
+}
 
 export function cartGet(){
   return JSON.parse(localStorage.getItem(CART_KEY)) || [];
@@ -59,10 +63,21 @@ export function cartClear(){
   cartSave([]);
 }
 
-export function cartWhatsAppMessage({ clientName="", clientCity="", deliveryType="", payment="", note="" } = {}){
+export function cartWhatsAppMessage({
+  clientName="",
+  clientCity="",
+  address="",
+  cep="",
+  deliveryType="",
+  deliveryDetail="",
+  shippingFee=null,
+  totalWithShipping=null,
+  payment="",
+  note=""
+} = {}){
   const cart = cartGet();
   let lines = [];
-  lines.push("Oi! Quero fechar esse pedido na THA MODA 🛍️");
+  lines.push("Oi! Quero fechar esse pedido na THA MODAS E ACESSÓRIOS 🛍️");
   lines.push("");
 
   let total = 0;
@@ -74,12 +89,17 @@ export function cartWhatsAppMessage({ clientName="", clientCity="", deliveryType
     total += subtotal;
   });
 
-  lines.push(`*Total: ${formatMoney(total)}*`);
+  lines.push(`*Total de produtos: ${formatMoney(total)}*`);
+  if(shippingFee != null) lines.push(`*Frete: ${formatMoney(shippingFee)}*`);
+  if(totalWithShipping != null) lines.push(`*Total com frete: ${formatMoney(totalWithShipping)}*`);
   lines.push("");
 
   if(clientName) lines.push(`*Nome:* ${clientName}`);
+  if(cep) lines.push(`*CEP:* ${cep}`);
   if(clientCity) lines.push(`*Bairro/Cidade:* ${clientCity}`);
+  if(address) lines.push(`*Endereço:* ${address}`);
   if(deliveryType) lines.push(`*Entrega/Retirada:* ${deliveryType}`);
+  if(deliveryDetail) lines.push(`*Detalhe do frete:* ${deliveryDetail}`);
   if(payment) lines.push(`*Pagamento:* ${payment}`);
   if(note) lines.push(`*Obs:* ${note}`);
 

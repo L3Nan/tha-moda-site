@@ -12,19 +12,24 @@ function setUrlParam(key, value){
   else url.searchParams.delete(key);
   history.replaceState({}, "", url.toString());
 }
-import { loadProducts, loadCategories, brl, getParam } from "./data.js";
+import { loadProducts, loadCategories, loadSettings, loadShipping, brl, getParam } from "./data.js";
 import {
   cartAdd, cartCount, cartGet, cartRemove, cartUpdateQuantity, cartClear,
-  cartTotal, cartWhatsAppMessage, openWhatsApp
+  cartTotal, cartWhatsAppMessage, openWhatsApp, setWhatsAppNumber
 } from "./cart.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   injectCartCount();
+  const settings = await loadSettings();
+  applyBrandSettings(settings);
+  if(settings?.whatsAppNumber) setWhatsAppNumber(settings.whatsAppNumber);
+  setActiveNav();
 
   // Search functionality
   const searchToggle = document.getElementById("searchToggle");
   const searchOverlay = document.getElementById("searchOverlay");
   const searchInput = document.getElementById("searchInput");
+  const searchClose = document.getElementById("searchClose");
 
   if(searchToggle && searchOverlay){
     searchToggle.addEventListener("click", () => {
@@ -34,6 +39,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     searchOverlay.addEventListener("click", (e) => {
       if(e.target === searchOverlay) searchOverlay.classList.remove("active");
+    });
+
+    searchClose?.addEventListener("click", () => {
+      searchOverlay.classList.remove("active");
     });
 
     searchInput.addEventListener("keydown", (e) => {
@@ -63,6 +72,44 @@ function injectCartCount(){
   if(el) el.textContent = String(cartCount());
 }
 
+function setActiveNav(){
+  const path = (location.pathname || "").toLowerCase();
+  const map = {
+    "/loja.html": "loja",
+    "/sobre.html": "sobre",
+    "/contato.html": "contato"
+  };
+  const current = map[path] || "";
+  document.querySelectorAll(".nav a").forEach((a) => {
+    const href = (a.getAttribute("href") || "").toLowerCase();
+    const key = href.replace("./", "/");
+    a.classList.toggle("is-active", key === `/${current}.html`);
+  });
+}
+function applyBrandSettings(settings){
+  const storeName = settings?.storeName || "Tha Modas e Acessórios";
+  document.querySelectorAll(".brand").forEach((brand) => {
+    const textSpan = brand.querySelector("span:last-child");
+    if(textSpan) textSpan.textContent = storeName;
+    if(settings?.logoUrl){
+      if(!brand.querySelector(".brand-logo")){
+        const img = document.createElement("img");
+        img.src = settings.logoUrl;
+        img.alt = storeName;
+        img.className = "brand-logo";
+        if(textSpan) brand.insertBefore(img, textSpan);
+        else brand.prepend(img);
+      }
+      brand.classList.add("has-logo");
+    }
+  });
+  if(document.title.includes("Tha Moda")){
+    document.title = document.title
+      .replace("Tha Moda & Acessórios", storeName)
+      .replace("Tha Moda", storeName);
+  }
+}
+
 /* ================= HOME ================= */
 async function initHome(){
   const products = await loadProducts();
@@ -80,11 +127,10 @@ function renderCategories(categories){
   if(!el) return;
 
   el.innerHTML = categories.map(c => `
-    <a class="card" href="./categoria.html?slug=${encodeURIComponent(c.slug)}" style="grid-column: span 3;">
+    <a class="card category-card" href="./categoria.html?slug=${encodeURIComponent(c.slug)}" style="grid-column: span 3;">
       <div class="card-body">
-        <div class="tag">Categoria</div>
         <div class="card-title">${escapeHtml(c.name)}</div>
-        <div class="muted">Ver itens</div>
+        <div class="category-link">Ver itens</div>
       </div>
     </a>
   `).join("");
@@ -105,7 +151,6 @@ function renderProductsSection(targetId, list){
 /* ================= LOJA ================= */
 async function initLoja(){
   const products = await loadProducts();
-
   const categoryBar = document.getElementById("categoryBar");
 
   // lê cat e search da URL (se vier do overlay que manda ?search=...)
@@ -115,8 +160,7 @@ async function initLoja(){
   // categorias "de UI" (não mexe no categories.json)
   const barCats = [
     { label: "TODOS", slug: "" },
-    { label: "BRINCOS", slug: "brincos" },
-    { label: "PULSEIRAS & COLARES", slug: "pulseiras-colares" },
+    { label: "ACESSÓRIOS", slug: "acessorios" },
     { label: "SAPATOS", slug: "sapatos" },
     { label: "TÊNIS", slug: "tenis" },
     { label: "SANDÁLIAS", slug: "sandalias" },
@@ -167,9 +211,7 @@ async function initLoja(){
     const q = (initialSearch || "").trim().toLowerCase();
 
     if(cat){
-      if(cat === "pulseiras-colares"){
-        list = list.filter(p => p.category === "pulseiras" || p.category === "colares");
-      } else if(cat === "tenis"){
+      if(cat === "tenis"){
         list = list.filter(p => p.category === "sapatos" && normText(p.name).includes("tenis"));
       } else if(cat === "sandalias"){
         list = list.filter(p => p.category === "sapatos" && normText(p.name).includes("sandalia"));
@@ -220,9 +262,11 @@ async function initLoja(){
 async function initCategoria(){
   const slug = getParam("slug");
   const products = await loadProducts();
+  const categories = await loadCategories();
 
   const title = document.getElementById("catTitle");
-  if(title) title.textContent = slug ? `Categoria: ${slug}` : "Categoria";
+  const catName = categories.find(c => c.slug === slug)?.name;
+  if(title) title.textContent = catName ? `Categoria: ${catName}` : "Categoria";
 
   const grid = document.getElementById("gridCategoria");
   if(!grid) return;
@@ -327,6 +371,92 @@ function bindProductDetail(p){
 /* ================= CARRINHO ================= */
 async function initCarrinho(){
   renderCartPage();
+  const shipping = await loadShipping();
+
+  const cepInput = document.getElementById("clientCep");
+  const deliverySelect = document.getElementById("deliveryType");
+  const shippingInfo = document.getElementById("shippingInfo");
+  const shippingFeeValue = document.getElementById("shippingFeeValue");
+  const totalWithShippingValue = document.getElementById("cartTotalWithShipping");
+
+  function normalizeCep(value){
+    return String(value || "").replace(/\D/g, "").slice(0, 8);
+  }
+
+  function regionLabel(region){
+    const map = {
+      norte: "Zona Norte",
+      sul: "Zona Sul",
+      leste: "Zona Leste",
+      oeste: "Zona Oeste"
+    };
+    return map[region] || region;
+  }
+
+  function detectRegion(cep){
+    const mapping = shipping?.cepMapping || [];
+    for(const item of mapping){
+      if(cep.startsWith(item.prefix)) return item.region;
+    }
+    return "";
+  }
+
+  function buildDeliveryOptions(){
+    if(!deliverySelect) return;
+    const cep = normalizeCep(cepInput?.value);
+    const region = cep.length >= 2 ? detectRegion(cep) : "";
+    const options = [];
+
+    if(region){
+      const fee = Number(shipping?.spRegions?.[region] ?? 0);
+      options.push({ value: `sp:${region}`, label: `Entrega SP - ${regionLabel(region)}`, fee });
+    } else if(cep.length === 8 && shipping?.correios?.enabled){
+      const pacFee = Number(shipping?.correios?.pac ?? 0);
+      const sedexFee = Number(shipping?.correios?.sedex ?? 0);
+      options.push({ value: "correios:pac", label: "Correios PAC", fee: pacFee });
+      options.push({ value: "correios:sedex", label: "Correios SEDEX", fee: sedexFee });
+    } else {
+      options.push({ value: "", label: "Preencha o CEP para ver o frete", fee: 0, disabled: true });
+    }
+
+    options.push({ value: "retirar", label: "Retirar", fee: 0 });
+
+    deliverySelect.innerHTML = options.map((o) => `
+      <option value="${o.value}" data-fee="${o.fee}" data-label="${o.label}" ${o.disabled ? "disabled" : ""}>
+        ${o.label}
+      </option>
+    `).join("");
+  }
+
+  function computeShipping(){
+    const selected = deliverySelect?.selectedOptions?.[0];
+    const fee = Number(selected?.dataset?.fee || 0);
+    const label = selected?.dataset?.label || "";
+    const productsTotal = cartTotal();
+    const totalWithShipping = productsTotal + fee;
+
+    if(shippingFeeValue) shippingFeeValue.textContent = brl(fee);
+    if(totalWithShippingValue) totalWithShippingValue.textContent = brl(totalWithShipping);
+    if(shippingInfo) shippingInfo.textContent = label ? `Frete selecionado: ${label}` : "Selecione uma opção de entrega";
+
+    return { fee, label, totalWithShipping };
+  }
+
+  buildDeliveryOptions();
+  computeShipping();
+
+  cepInput?.addEventListener("input", () => {
+    buildDeliveryOptions();
+    computeShipping();
+  });
+
+  deliverySelect?.addEventListener("change", () => {
+    computeShipping();
+  });
+
+  document.addEventListener("cart:updated", () => {
+    computeShipping();
+  });
 
   document.getElementById("btnClearCart")?.addEventListener("click", () => {
     cartClear();
@@ -337,9 +467,12 @@ async function initCarrinho(){
   document.getElementById("btnCheckout")?.addEventListener("click", () => {
     const clientName = document.getElementById("clientName")?.value || "";
     const clientCity = document.getElementById("clientCity")?.value || "";
+    const address = document.getElementById("clientAddress")?.value || "";
+    const cep = normalizeCep(document.getElementById("clientCep")?.value || "");
     const deliveryType = document.getElementById("deliveryType")?.value || "";
     const payment = document.getElementById("payment")?.value || "";
     const note = document.getElementById("note")?.value || "";
+    const shippingState = computeShipping();
 
     const cart = cartGet();
     if(!cart.length){
@@ -352,7 +485,19 @@ async function initCarrinho(){
         return;
     }
 
-    const msg = cartWhatsAppMessage({ clientName, clientCity, deliveryType, payment, note });
+    const deliveryDetail = shippingState?.label || "";
+    const msg = cartWhatsAppMessage({
+      clientName,
+      clientCity,
+      address,
+      cep,
+      deliveryType,
+      deliveryDetail,
+      shippingFee: shippingState?.fee ?? 0,
+      totalWithShipping: shippingState?.totalWithShipping ?? cartTotal(),
+      payment,
+      note
+    });
     openWhatsApp(msg);
   });
 }
@@ -398,6 +543,7 @@ function renderCartPage(){
   `).join("");
 
   totalEl.textContent = brl(cartTotal());
+  document.dispatchEvent(new CustomEvent("cart:updated"));
 
   // bind controls
   listEl.querySelectorAll("[data-inc]").forEach(b => b.addEventListener("click", () => {
@@ -446,7 +592,7 @@ function productCard(p){
           <span class="price">${brl(price)}</span>
           ${hasSale ? `<span class="price-old">${brl(p.price)}</span>` : ``}
         </div>
-        <div class="muted" style="margin-top:6px">${escapeHtml((p.category||"").toUpperCase())}</div>
+        <div class="muted" style="margin-top:6px">${escapeHtml(formatCategoryLabel(p.category, p.subcategory))}</div>
         <div style="margin-top:10px">
           ${p.inStock 
             ? `<a class="btn btn-primary btn-wide" href="./produto.html?slug=${encodeURIComponent(p.slug)}">Ver detalhes</a>`
@@ -456,6 +602,25 @@ function productCard(p){
       </div>
     </article>
   `;
+}
+
+function formatCategoryLabel(category, subcategory){
+  const labels = {
+    acessorios: "Acessórios",
+    sapatos: "Sapatos",
+    vestidos: "Vestidos",
+    blusas: "Blusas",
+    calcas: "Calças",
+    saias: "Saias",
+    macacao: "Macacão"
+  };
+  const base = labels[category] || category || "";
+  if(!base) return "";
+  if(subcategory){
+    const sub = labels[subcategory] || String(subcategory);
+    return `${base} • ${sub}`;
+  }
+  return base;
 }
 
 function renderProductDetail(p){
