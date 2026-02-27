@@ -18,42 +18,18 @@ import {
   cartTotal, cartWhatsAppMessage, openWhatsApp, setWhatsAppNumber
 } from "./cart.js";
 
+const PLACEHOLDER_IMAGE = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='750'><rect width='100%25' height='100%25' fill='%23FFF3F8'/><text x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23C54886' font-family='Arial' font-size='20'>Sem imagem</text></svg>";
+
+let productsCache = null;
+
 document.addEventListener("DOMContentLoaded", async () => {
   injectCartCount();
   const settings = await loadSettings();
   applyBrandSettings(settings);
   if(settings?.whatsAppNumber) setWhatsAppNumber(settings.whatsAppNumber);
   setActiveNav();
-
-  // Search functionality
-  const searchToggle = document.getElementById("searchToggle");
-  const searchOverlay = document.getElementById("searchOverlay");
-  const searchInput = document.getElementById("searchInput");
-  const searchClose = document.getElementById("searchClose");
-
-  if(searchToggle && searchOverlay){
-    searchToggle.addEventListener("click", () => {
-      searchOverlay.classList.add("active");
-      searchInput.focus();
-    });
-
-    searchOverlay.addEventListener("click", (e) => {
-      if(e.target === searchOverlay) searchOverlay.classList.remove("active");
-    });
-
-    searchClose?.addEventListener("click", () => {
-      searchOverlay.classList.remove("active");
-    });
-
-    searchInput.addEventListener("keydown", (e) => {
-      if(e.key === "Escape") searchOverlay.classList.remove("active");
-      if(e.key === "Enter") {
-        const q = searchInput.value.trim();
-        if(q) window.location.href = `./loja.html?search=${encodeURIComponent(q)}`;
-        searchOverlay.classList.remove("active");
-      }
-    });
-  }
+  await initSearchOverlay();
+  initQuickAdd();
 
   const page = document.body.dataset.page;
 
@@ -110,6 +86,80 @@ function applyBrandSettings(settings){
   }
 }
 
+async function initSearchOverlay(){
+  const searchToggle = document.getElementById("searchToggle");
+  const searchOverlay = document.getElementById("searchOverlay");
+  const searchInput = document.getElementById("searchInput");
+  const searchClose = document.getElementById("searchClose");
+  const searchResults = document.getElementById("searchResults");
+
+  if(!searchToggle || !searchOverlay || !searchInput) return;
+
+  const products = await getProductsCached();
+
+  const renderResults = (query) => {
+    const q = (query || "").trim().toLowerCase();
+    if(!searchResults) return;
+    if(!q){
+      searchResults.innerHTML = "";
+      return;
+    }
+    const list = products.filter(p => (p.name || "").toLowerCase().includes(q)).slice(0,8);
+    if(!list.length){
+      searchResults.innerHTML = `<div class="search-empty">Nenhum resultado encontrado.</div>`;
+      return;
+    }
+    searchResults.innerHTML = list.map(p => `
+      <div class="search-item">
+        <a class="search-item-link" href="./produto.html?slug=${encodeURIComponent(p.slug)}">
+          <div class="search-thumb">
+            <img src="${resolveImage(p?.images?.[0])}" data-original="${p?.images?.[0] || ""}" onerror="handleImageError(this)" referrerpolicy="no-referrer" alt="${escapeHtml(p.name)}">
+          </div>
+          <div class="search-meta">
+            <div class="search-name">${escapeHtml(p.name)}</div>
+            <div class="search-price">${brl(priceOf(p))}</div>
+          </div>
+        </a>
+        ${p.inStock ? `<button class="btn btn-primary search-add" type="button" data-add="${p.id}">Adicionar</button>` : ``}
+      </div>
+    `).join("");
+  };
+
+  searchToggle.addEventListener("click", () => {
+    searchOverlay.classList.add("active");
+    searchInput.focus();
+  });
+
+  searchOverlay.addEventListener("click", (e) => {
+    if(e.target === searchOverlay) searchOverlay.classList.remove("active");
+  });
+
+  searchClose?.addEventListener("click", () => {
+    searchOverlay.classList.remove("active");
+  });
+
+  searchInput.addEventListener("input", (e) => {
+    renderResults(e.target.value);
+  });
+
+  searchInput.addEventListener("keydown", (e) => {
+    if(e.key === "Escape") searchOverlay.classList.remove("active");
+    if(e.key === "Enter") {
+      const first = searchResults?.querySelector(".search-item-link");
+      if(first){
+        e.preventDefault();
+        window.location.href = first.getAttribute("href");
+        searchOverlay.classList.remove("active");
+        return;
+      }
+      const q = searchInput.value.trim();
+      if(q) window.location.href = `./loja.html?search=${encodeURIComponent(q)}`;
+      searchOverlay.classList.remove("active");
+    }
+  });
+
+}
+
 /* ================= HOME ================= */
 async function initHome(){
   const products = await loadProducts();
@@ -150,8 +200,9 @@ function renderProductsSection(targetId, list){
 
 /* ================= LOJA ================= */
 async function initLoja(){
-  const products = await loadProducts();
+  const products = await getProductsCached();
   const categoryBar = document.getElementById("categoryBar");
+  const grid = document.getElementById("gridLoja");
 
   // lê cat e search da URL (se vier do overlay que manda ?search=...)
   const initialCat = getParam("cat") || "";
@@ -261,7 +312,7 @@ async function initLoja(){
 /* ================= CATEGORIA ================= */
 async function initCategoria(){
   const slug = getParam("slug");
-  const products = await loadProducts();
+  const products = await getProductsCached();
   const categories = await loadCategories();
 
   const title = document.getElementById("catTitle");
@@ -283,7 +334,7 @@ async function initCategoria(){
 /* ================= PRODUTO ================= */
 async function initProduto(){
   const slug = getParam("slug");
-  const products = await loadProducts();
+  const products = await getProductsCached();
 
   const p = products.find(x => x.slug === slug);
   const wrap = document.getElementById("productWrap");
@@ -358,7 +409,10 @@ function bindProductDetail(p){
     }
     cartAdd(p, { color: selectedColor, size: selectedSize, quantity: qty });
     injectCartCount();
-    alert("Adicionado ao carrinho.");
+    showToast("Adicionado ao carrinho.", "Ir para carrinho", "./carrinho.html");
+    setTimeout(() => {
+      window.location.href = "./carrinho.html";
+    }, 400);
   });
 
   function validate(){
@@ -370,7 +424,8 @@ function bindProductDetail(p){
 
 /* ================= CARRINHO ================= */
 async function initCarrinho(){
-  renderCartPage();
+  const products = await getProductsCached();
+  renderCartPage(products);
   const shipping = await loadShipping();
 
   const cepInput = document.getElementById("clientCep");
@@ -378,6 +433,8 @@ async function initCarrinho(){
   const shippingInfo = document.getElementById("shippingInfo");
   const shippingFeeValue = document.getElementById("shippingFeeValue");
   const totalWithShippingValue = document.getElementById("cartTotalWithShipping");
+  const btnCheckout = document.getElementById("btnCheckout");
+  const clientNameInput = document.getElementById("clientName");
 
   function normalizeCep(value){
     return String(value || "").replace(/\D/g, "").slice(0, 8);
@@ -442,12 +499,21 @@ async function initCarrinho(){
     return { fee, label, totalWithShipping };
   }
 
+  function updateCheckoutState(){
+    const nameOk = Boolean(clientNameInput?.value?.trim());
+    const cepOk = normalizeCep(cepInput?.value).length === 8;
+    const hasItems = cartGet().length > 0;
+    if(btnCheckout) btnCheckout.disabled = !(nameOk && cepOk && hasItems);
+  }
+
   buildDeliveryOptions();
   computeShipping();
+  updateCheckoutState();
 
   cepInput?.addEventListener("input", () => {
     buildDeliveryOptions();
     computeShipping();
+    updateCheckoutState();
   });
 
   deliverySelect?.addEventListener("change", () => {
@@ -456,15 +522,20 @@ async function initCarrinho(){
 
   document.addEventListener("cart:updated", () => {
     computeShipping();
+    updateCheckoutState();
+  });
+
+  clientNameInput?.addEventListener("input", () => {
+    updateCheckoutState();
   });
 
   document.getElementById("btnClearCart")?.addEventListener("click", () => {
     cartClear();
     injectCartCount();
-    renderCartPage();
+    renderCartPage(products);
   });
 
-  document.getElementById("btnCheckout")?.addEventListener("click", () => {
+  btnCheckout?.addEventListener("click", () => {
     const clientName = document.getElementById("clientName")?.value || "";
     const clientCity = document.getElementById("clientCity")?.value || "";
     const address = document.getElementById("clientAddress")?.value || "";
@@ -502,24 +573,47 @@ async function initCarrinho(){
   });
 }
 
-function renderCartPage(){
+function renderCartPage(products = []){
   const listEl = document.getElementById("cartList");
   const totalEl = document.getElementById("cartTotalValue");
+  const summaryEl = document.querySelector(".summary-card");
+  const cartLayout = document.querySelector(".cart-layout");
+  const shippingFeeValue = document.getElementById("shippingFeeValue");
+  const totalWithShippingValue = document.getElementById("cartTotalWithShipping");
+  const shippingInfo = document.getElementById("shippingInfo");
   if(!listEl || !totalEl) return;
 
   const cart = cartGet();
   if(!cart.length){
-    listEl.innerHTML = `<div class="notice">Seu carrinho está vazio. <a class="kbd" href="./loja.html">Ir para loja</a></div>`;
+    const recos = products.filter(p => (p.tags||[]).includes("novidades") || (p.tags||[]).includes("mais_vendidos")).slice(0,4);
+    listEl.innerHTML = `
+      <div class="cart-empty" style="grid-column: span 12;">
+        <div class="cart-empty-title">Seu carrinho está vazio</div>
+        <div class="muted">Confira nossos destaques e monte seu pedido.</div>
+        <a class="btn btn-primary" href="./loja.html">Ver produtos</a>
+      </div>
+      <div class="cart-empty-recos" style="grid-column: span 12;">
+        <div class="section-title" style="font-size:20px">Recomendados</div>
+        <div class="grid">${recos.map(p => productCard(p)).join("")}</div>
+      </div>
+    `;
     totalEl.textContent = "R$ 0,00";
+    if(shippingFeeValue) shippingFeeValue.textContent = "R$ 0,00";
+    if(totalWithShippingValue) totalWithShippingValue.textContent = "R$ 0,00";
+    if(shippingInfo) shippingInfo.textContent = "Adicione itens para calcular o frete.";
+    summaryEl?.classList.add("is-hidden");
+    cartLayout?.classList.add("is-empty");
     return;
   }
+  summaryEl?.classList.remove("is-hidden");
+  cartLayout?.classList.remove("is-empty");
 
   listEl.innerHTML = cart.map(i => `
     <div class="card" style="grid-column: span 12;">
       <div class="card-body" style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap">
         <div style="display:flex;gap:12px;align-items:center;min-width:260px">
           <div style="width:64px;height:64px;border-radius:12px;background:var(--bg-soft);overflow:hidden;border:1px solid var(--border)">
-            ${i.image ? `<img src="${i.image}" style="width:100%;height:100%;object-fit:cover">` : ""}
+            ${i.image ? `<img src="${resolveImage(i.image)}" data-original="${i.image}" onerror="handleImageError(this)" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:cover">` : `<img src="${PLACEHOLDER_IMAGE}" style="width:100%;height:100%;object-fit:cover">`}
           </div>
           <div>
             <div style="font-weight:900">${escapeHtml(i.name)}</div>
@@ -550,17 +644,17 @@ function renderCartPage(){
     const key = b.dataset.inc;
     const item = cartGet().find(x => x.key === key);
     cartUpdateQuantity(key, (item?.quantity||1) + 1);
-    injectCartCount(); renderCartPage();
+    injectCartCount(); renderCartPage(products);
   }));
   listEl.querySelectorAll("[data-dec]").forEach(b => b.addEventListener("click", () => {
     const key = b.dataset.dec;
     const item = cartGet().find(x => x.key === key);
     cartUpdateQuantity(key, Math.max(1, (item?.quantity||1) - 1));
-    injectCartCount(); renderCartPage();
+    injectCartCount(); renderCartPage(products);
   }));
   listEl.querySelectorAll("[data-remove]").forEach(b => b.addEventListener("click", () => {
     cartRemove(b.dataset.remove);
-    injectCartCount(); renderCartPage();
+    injectCartCount(); renderCartPage(products);
   }));
 }
 
@@ -568,7 +662,8 @@ function productCard(p){
   const price = priceOf(p);
   const hasSale = p.salePrice != null;
 
-  const img = (p.images && p.images[0]) ? p.images[0] : "";
+  const rawImg = p?.images?.[0] || "";
+  const img = resolveImage(rawImg);
   
   let badgesHtml = "";
   if(hasSale) badgesHtml += `<div class="tag tag-promocao">Promo</div>`;
@@ -579,24 +674,30 @@ function productCard(p){
   // if(!badgesHtml) badgesHtml = `<div class="tag">Produto</div>`; // REMOVIDO para não poluir
 
   return `
-    <article class="card" style="${!p.inStock ? "opacity:0.7" : ""}">
+    <article class="card product-card" style="${!p.inStock ? "opacity:0.7" : ""}">
       <a href="./produto.html?slug=${encodeURIComponent(p.slug)}">
         <div class="img-box">
-          ${img ? `<img src="${img}" alt="${escapeHtml(p.name)}">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg-soft);color:var(--text-2);font-size:14px;">📦 Produto</div>`}
+          <img src="${img}" data-original="${rawImg}" onerror="handleImageError(this)" referrerpolicy="no-referrer" alt="${escapeHtml(p.name)}">
         </div>
       </a>
       <div class="card-body">
-        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">${badgesHtml}</div>
+        <div class="card-badges" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">${badgesHtml}</div>
         <div class="card-title">${escapeHtml(p.name)}</div>
         <div>
           <span class="price">${brl(price)}</span>
           ${hasSale ? `<span class="price-old">${brl(p.price)}</span>` : ``}
         </div>
         <div class="muted" style="margin-top:6px">${escapeHtml(formatCategoryLabel(p.category, p.subcategory))}</div>
-        <div style="margin-top:10px">
-          ${p.inStock 
-            ? `<a class="btn btn-primary btn-wide" href="./produto.html?slug=${encodeURIComponent(p.slug)}">Ver detalhes</a>`
-            : `<a class="btn btn-ghost btn-wide" href="./produto.html?slug=${encodeURIComponent(p.slug)}">Ver detalhes (Esgotado)</a>`
+        <div class="card-actions">
+          ${p.inStock
+            ? `
+              <button class="btn btn-primary btn-wide" type="button" data-add="${p.id}">Adicionar ao carrinho</button>
+              <a class="btn btn-ghost btn-wide" href="./produto.html?slug=${encodeURIComponent(p.slug)}">Ver detalhes</a>
+            `
+            : `
+              <button class="btn btn-primary btn-wide" type="button" disabled>Indisponível</button>
+              <a class="btn btn-ghost btn-wide" href="./produto.html?slug=${encodeURIComponent(p.slug)}">Ver detalhes</a>
+            `
           }
         </div>
       </div>
@@ -624,14 +725,15 @@ function formatCategoryLabel(category, subcategory){
 }
 
 function renderProductDetail(p){
-  const img = (p.images && p.images[0]) ? p.images[0] : "";
+  const rawImg = p?.images?.[0] || "";
+  const img = resolveImage(rawImg);
   const hasSale = p.salePrice != null;
 
   // Gallery thumbnails
   const thumbs = (p.images || []).map((src, i) => `
     <button type="button" class="thumb-btn ${i===0?'active':''}" onclick="document.getElementById('mainImg').src='${src}'" style="border:none;background:none;cursor:pointer;padding:0">
       <div style="width:60px;height:60px;border-radius:8px;overflow:hidden;border:1px solid var(--border)">
-        <img src="${src}" style="width:100%;height:100%;object-fit:cover">
+        <img src="${resolveImage(src)}" data-original="${src || ""}" onerror="handleImageError(this)" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:cover">
       </div>
     </button>
   `).join("");
@@ -641,7 +743,7 @@ function renderProductDetail(p){
       <div class="product-media">
         <div class="card" style="overflow:hidden">
           <div class="img-box" style="aspect-ratio: 4/4;">
-            ${img ? `<img id="mainImg" src="${img}" alt="${escapeHtml(p.name)}">` : ``}
+            <img id="mainImg" src="${img}" data-original="${rawImg}" onerror="handleImageError(this)" referrerpolicy="no-referrer" alt="${escapeHtml(p.name)}">
           </div>
         </div>
         <div style="display:flex;gap:10px;margin-top:10px;overflow-x:auto;padding-bottom:4px">
@@ -733,6 +835,102 @@ function setPressed(container, attr, value){
 
 function priceOf(p){
   return Number(p.salePrice ?? p.price ?? 0);
+}
+
+function resolveImage(src){
+  const value = String(src || "").trim();
+  if(!value) return PLACEHOLDER_IMAGE;
+  if(value.startsWith("http://") || value.startsWith("https://") || value.startsWith("/")) return value;
+  return PLACEHOLDER_IMAGE;
+}
+
+function imageProxyUrl(src){
+  const value = String(src || "").trim();
+  if(!value) return "";
+  if(value.startsWith("http://")) return `https://images.weserv.nl/?url=${encodeURIComponent(value.replace("http://",""))}`;
+  if(value.startsWith("https://")) return `https://images.weserv.nl/?url=${encodeURIComponent(value.replace("https://",""))}`;
+  return "";
+}
+
+function handleImageError(img){
+  if(!img) return;
+  const attempted = img.getAttribute("data-fallback") || "";
+  const original = img.getAttribute("data-original") || "";
+  if(attempted !== "proxy"){
+    const proxy = imageProxyUrl(original);
+    if(proxy){
+      img.setAttribute("data-fallback", "proxy");
+      img.src = proxy;
+      return;
+    }
+  }
+  img.src = PLACEHOLDER_IMAGE;
+}
+
+window.handleImageError = handleImageError;
+
+async function getProductsCached(){
+  if(productsCache) return productsCache;
+  productsCache = await loadProducts();
+  return productsCache;
+}
+
+function initQuickAdd(){
+  document.addEventListener("click", async (e) => {
+    const btn = e.target.closest("[data-add]");
+    if(!btn) return;
+    const id = btn.getAttribute("data-add");
+    const products = await getProductsCached();
+    const product = products.find(p => p.id === id);
+    if(!product) return;
+    if(canQuickAdd(product)){
+      quickAddProduct(product, { redirect: false });
+      return;
+    }
+    window.location.href = `./produto.html?slug=${encodeURIComponent(product.slug)}`;
+  });
+}
+
+function canQuickAdd(p){
+  return Boolean(p?.inStock && (p.colors||[]).length === 1 && (p.sizes||[]).length === 1);
+}
+
+function quickAddProduct(p, { redirect = false } = {}){
+  if(!canQuickAdd(p)){
+    window.location.href = `./produto.html?slug=${encodeURIComponent(p.slug)}`;
+    return;
+  }
+  const color = p.colors[0];
+  const size = p.sizes[0];
+  cartAdd(p, { color, size, quantity: 1 });
+  injectCartCount();
+  showToast("Adicionado ao carrinho.", "Ir para carrinho", "./carrinho.html");
+  if(redirect){
+    setTimeout(() => {
+      window.location.href = "./carrinho.html";
+    }, 400);
+  }
+}
+
+function showToast(message, actionLabel, actionHref){
+  let toast = document.getElementById("toast");
+  if(!toast){
+    toast = document.createElement("div");
+    toast.id = "toast";
+    toast.className = "toast";
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = `
+    <div class="toast-body">
+      <div class="toast-message">${escapeHtml(message)}</div>
+      ${actionLabel && actionHref ? `<a class="btn btn-primary" href="${actionHref}">${actionLabel}</a>` : ""}
+    </div>
+  `;
+  toast.classList.add("is-visible");
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => {
+    toast.classList.remove("is-visible");
+  }, 2500);
 }
 
 function uniq(arr){
