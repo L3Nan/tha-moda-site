@@ -85,7 +85,15 @@ export function cartWhatsAppMessage({
   const storeName = "THA MODAS E ACESSÓRIOS";
 
   // Formatar CEP
-  const cepFormatted = cep.replace(/^(\d{5})(\d{3})/, "$1-$2");
+  const cepFormatted = String(cep).replace(/^(\d{5})(\d{3})/, "$1-$2");
+
+  // Sanitizar campos do usuário para remover quebras internas e caracteres perigosos
+  const sanitize = (str) => String(str || "").replace(/\s*\n+\s*/g, " ").replace(/[*_~]/g, "").trim();
+
+  const safeName = sanitize(clientName);
+  const safeCity = sanitize(clientCity);
+  const safeAddress = sanitize(address);
+  const safeNote = sanitize(note);
 
   // Definir modalidade com Motoboy ou Retirada
   let deliveryModeFormatado = deliveryDetail;
@@ -122,10 +130,10 @@ export function cartWhatsAppMessage({
 
   // Entrega
   lines.push(`*🚚 Entrega*`);
-  lines.push(`• Nome: ${clientName}`);
+  lines.push(`• Nome: ${safeName}`);
   if(cep) lines.push(`• CEP: ${cepFormatted}`);
-  if(address) lines.push(`• Endereço: ${address}`);
-  if(clientCity) lines.push(`• Bairro/Cidade: ${clientCity}`);
+  if(address) lines.push(`• Endereço: ${safeAddress}`);
+  if(clientCity) lines.push(`• Bairro/Cidade: ${safeCity}`);
   if(deliveryModeFormatado) lines.push(`• Modalidade: ${deliveryModeFormatado}`);
   if(shippingLabel && deliveryType !== "retirar") lines.push(`• Detalhe do frete: ${shippingLabel}`);
   lines.push("");
@@ -138,21 +146,24 @@ export function cartWhatsAppMessage({
   }
 
   // Observações (só se existir)
-  if(note && note.trim()){
+  if(safeNote){
     lines.push(`*📝 Observações*`);
-    lines.push(note);
+    lines.push(safeNote);
     lines.push("");
   }
 
   // Fechamento
   lines.push(`*✅ Pode confirmar disponibilidade e prazo de entrega/retirada?*`);
 
-  return encodeURIComponent(lines.join("\n"));
+  // RETORNA A MENSAGEM CRUA (sem encodeURIComponent aqui)
+  return lines.join("\n");
 }
 
 export function openWhatsApp(message){
-  // message is already encoded
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+  // Faz o encodeURIComponent APENAS AQUI para garantir quebras de linha corretas (%0A)
+  const encoded = encodeURIComponent(message);
+  console.log("WhatsApp URL Preview (check for %0A):", encoded.substring(0, 200));
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;
   window.open(url, "_blank");
 }
 

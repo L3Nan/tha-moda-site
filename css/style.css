@@ -700,3 +700,106 @@ body[data-page="home"] .hero-header{position:relative;box-shadow:none}
   line-height: 1.5;
 }
 
+/* =========================
+   MOBILE ONLY (não afeta desktop)
+   ========================= */
+@media (max-width: 720px){
+
+  /* 1) Topbar: não estourar */
+  .topbar-inner{
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    text-align: center;
+  }
+  .topbar-right{
+    justify-content: center;
+  }
+
+  /* 2) Header em 2 linhas (sem mudar HTML) */
+  .header-inner.header-hero{
+    padding: 10px 12px;
+    row-gap: 10px;
+
+    /* vira layout em 2 linhas */
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "brand actions"
+      "nav nav";
+    align-items: center;
+  }
+
+  .hero-brand{ grid-area: brand; justify-self: center; }
+  .hero-actions{ grid-area: actions; justify-self: end; }
+  .nav-left{
+    grid-area: nav;
+    justify-self: stretch;
+
+    /* links confortáveis no mobile */
+    display: flex !important;          /* sobrescreve qualquer display:none */
+    justify-content: center;
+    gap: 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  .nav-left::-webkit-scrollbar{ display: none; }
+
+  .nav-left a{
+    white-space: nowrap;
+    padding: 10px 12px;
+    border-radius: 999px;
+  }
+
+  /* 3) Logo e botões mais “tocáveis” */
+  .hero-logo{ height: 48px; }
+
+  .pill{
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px 12px;
+  }
+
+  /* 4) Container e seções com respiro menor */
+  .container{ padding: 18px 14px; }
+  .hero{ padding: 22px 14px 10px; }
+
+  /* 5) Hero CTA ocupar largura */
+  .hero-cta{
+    width: 100%;
+    max-width: 420px;
+  }
+
+  /* 6) Benefícios: melhor leitura */
+  .benefit{
+    text-align: left;
+  }
+
+  /* 7) Barra de categorias (loja): ocupar 100% no mobile */
+  .category-bar{
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+    padding: 12px 12px;
+  }
+
+  /* 8) Form: 1 coluna no mobile */
+  .field{ grid-column: span 12; }
+}
+
+@media (max-width: 480px){
+  /* Instagram: 1 coluna no celular pequeno */
+  .instagram-feed{
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Tipografia um pouco mais compacta */
+  .section-title{
+    font-size: 24px;
+  }
+
+  /* Imagem/logo do hero menor */
+  .logo-mark{ max-width: 220px; }
+}
