@@ -51,75 +51,85 @@
   </div>
 </div>
 
-<main class="container page">
-  <h1 class="section-title">Carrinho</h1>
+<main class="page">
+  <div class="container">
+    <h1 class="section-title">Carrinho</h1>
 
-  <div class="cart-layout">
-    <div>
-      <div class="grid" id="cartList"></div>
-    </div>
-    <aside>
-      <div class="card summary-card">
-        <div class="card-body">
-          <div class="summary-title">Resumo</div>
-          <div class="row">
-            <div>Subtotal</div>
-            <div id="cartTotalValue" style="font-weight:900">R$ 0,00</div>
-          </div>
-          <div class="row">
-            <div>Frete</div>
-            <div id="shippingFeeValue" style="font-weight:900">R$ 0,00</div>
-          </div>
-          <div class="row" style="margin-top:8px">
-            <div style="font-weight:900">Total</div>
-            <div id="cartTotalWithShipping" style="font-size:18px;font-weight:900">R$ 0,00</div>
-          </div>
-          <div class="muted" id="shippingInfo" style="margin-top:6px">Informe o CEP para calcular o frete.</div>
+    <div class="cart-layout">
+      <div>
+        <div class="grid" id="cartList"></div>
+      </div>
+      <aside>
+        <div class="card summary-card">
+          <div class="card-body">
+            <div class="summary-title">Resumo</div>
+            <div class="row">
+              <div>Subtotal</div>
+              <div id="cartTotalValue" style="font-weight:900">R$ 0,00</div>
+            </div>
+            <div class="row">
+              <div>Frete</div>
+              <div id="shippingFeeValue" style="font-weight:900">R$ 0,00</div>
+            </div>
+            <div class="row" style="margin-top:8px">
+              <div style="font-weight:900">Total</div>
+              <div id="cartTotalWithShipping" style="font-size:18px;font-weight:900">R$ 0,00</div>
+            </div>
+            <div class="muted" id="shippingInfo" style="margin-top:6px">Informe o CEP para calcular o frete.</div>
 
-          <div class="hr"></div>
+            <div class="hr"></div>
 
-          <div class="form-row">
-            <div class="field-12">
-              <label>Seu Nome</label>
-              <input id="clientName" placeholder="Seu nome completo">
+            <div class="form-row">
+              <div class="field-12">
+                <label>Seu Nome</label>
+                <input id="clientName" placeholder="Seu nome completo">
+              </div>
+              <div class="field">
+                <label>CEP</label>
+                <input id="clientCep" inputmode="numeric" placeholder="Ex: 01000-000">
+              </div>
+              <div class="field">
+                <label>Cidade / Bairro</label>
+                <input id="clientCity" placeholder="Ex: Centro">
+              </div>
+              <div class="field-12">
+                <label>Endereço (rua, número, complemento)</label>
+                <input id="clientAddress" placeholder="Ex: Rua Exemplo, 123 - Apto 45">
+              </div>
+              <div class="field">
+                <label>Entrega</label>
+                <select id="deliveryType"></select>
+              </div>
             </div>
-            <div class="field">
-              <label>CEP</label>
-              <input id="clientCep" inputmode="numeric" placeholder="Ex: 01000-000">
+            
+            <div class="hr"></div>
+            
+            <div class="form-row">
+              <div class="field-12">
+                <label>Forma de Pagamento</label>
+                <select id="payment">
+                  <option value="pix">PIX (5% de desconto)</option>
+                  <option value="cartao">Cartão de Crédito (Link)</option>
+                  <option value="dinheiro">Dinheiro (Retirada)</option>
+                </select>
+              </div>
+              <div class="field-12">
+                <label>Observações</label>
+                <textarea id="note" placeholder="Ex: Embrulhar para presente..."></textarea>
+              </div>
             </div>
-            <div class="field">
-              <label>Cidade / Bairro</label>
-              <input id="clientCity" placeholder="Ex: Centro">
-            </div>
-            <div class="field-12">
-              <label>Endereço (rua, número, complemento)</label>
-              <input id="clientAddress" placeholder="Ex: Rua Exemplo, 123 - Apto 45">
-            </div>
-            <div class="field">
-              <label>Entrega</label>
-              <select id="deliveryType"></select>
-            </div>
-            <div class="field">
-              <label>Pagamento</label>
-              <select id="payment">
-                <option value="Pix">Pix</option>
-                <option value="Cartão">Cartão</option>
-                <option value="Dinheiro">Dinheiro</option>
-              </select>
-            </div>
-            <div class="field-12">
-              <label>Observação (opcional)</label>
-              <textarea id="note" placeholder="Ex: se não tiver M, pode ser G..."></textarea>
-            </div>
-          </div>
 
-          <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px">
-            <button class="btn btn-primary btn-wide" id="btnCheckout">Finalizar no WhatsApp</button>
-            <button class="btn btn-ghost btn-wide" id="btnClearCart">Limpar carrinho</button>
+            <button class="btn btn-primary btn-wide" id="btnCheckout" style="margin-top:16px;font-size:16px" disabled>
+              Finalizar no WhatsApp 
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-left:8px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            </button>
+            <div style="margin-top:12px;text-align:center">
+              <button class="btn btn-ghost btn-sm" id="btnClearCart">Limpar Carrinho</button>
+            </div>
           </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </div>
   </div>
 </main>
 

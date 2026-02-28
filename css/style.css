@@ -6,7 +6,7 @@
   padding: 14px 22px;
   border-bottom: none;
   background: #fff;
-  max-width: 980px;
+  max-width: 1180px; /* Aumentado para bater com container geral */
   margin: 0 auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -99,7 +99,15 @@ a:hover{color:var(--tm-rose)}
 img{max-width:100%;display:block}
 
 .container{max-width:1180px;margin:0 auto;padding:28px 18px}
-.page{flex:1;background:#fff}
+.page{
+  flex:1;
+  background: #fff url('../uploads/bg-main.png') center/cover no-repeat fixed;
+  background-size: cover; /* Garante que cubra tudo */
+}
+/* Força transparência em todos os filhos diretos do main, se necessário */
+.page > .container {
+  background: transparent;
+}
 .section{padding:24px 0}
 .section-heading{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:12px;color:var(--tm-gold)}
 .section-heading span{opacity:.5}
@@ -504,15 +512,13 @@ body[data-page="home"] .section:first-child .tag{
   color:var(--tm-gold);
 }
 body[data-page="home"]{
-  background:radial-gradient(circle at 20% 10%, rgba(217,106,138,.12), transparent 45%), radial-gradient(circle at 80% 20%, rgba(199,154,122,.15), transparent 50%), var(--bg);
+  /* background:radial-gradient(circle at 20% 10%, rgba(217,106,138,.12), transparent 45%), radial-gradient(circle at 80% 20%, rgba(199,154,122,.15), transparent 50%), var(--bg); REMOVIDO para usar o fundo global */
 }
 
 .hero{
   padding:36px 18px 16px;
-  background:
-    linear-gradient(rgba(255,255,255,.35), rgba(255,255,255,.35)),
-    url("../uploads/store-branding-bg.png") center/cover no-repeat;
-  border-bottom:1px solid rgba(199,154,122,.2);
+  background: transparent;
+  border-bottom: none;
 }
 .hero-content{
   max-width:980px;margin:0 auto;text-align:center;
@@ -542,17 +548,12 @@ body[data-page="home"]{
 .logo-amp::before,.logo-amp::after{
   content:"";display:block;width:48px;height:1px;background:rgba(198,154,122,.8);
 }
-.logo-block-section{
-  background:radial-gradient(circle at 15% 10%, rgba(217,106,138,.22), transparent 45%), radial-gradient(circle at 80% 20%, rgba(199,154,122,.22), transparent 55%), #fdf7f6;
-  border-bottom:1px solid rgba(199,154,122,.2);
-  padding:22px 18px 16px;
-}
-.logo-block-section .logo-block{max-width:980px;margin:0 auto}
-.store-hero-branding{
-  padding:46px 0 30px;
-  background:
-    linear-gradient(rgba(255,255,255,.35), rgba(255,255,255,.35)),
-    url("../uploads/store-branding-bg.png") center/cover no-repeat;
+/* Força transparência na logo-block-section em todas as ocorrências */
+.logo-block-section,
+.store-hero-branding {
+  background: transparent !important;
+  border-bottom: none !important;
+  padding: 0;
 }
 .hero-title{font-family:'Playfair Display',serif;font-size:40px;color:var(--tm-text-accent);margin-top:4px}
 .hero-subtitle{max-width:560px;color:#8b6f68;font-size:15px;line-height:1.6}
