@@ -38,6 +38,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   if(page === "categoria") await initCategoria();
   if(page === "produto") await initProduto();
   if(page === "carrinho") await initCarrinho();
+  normalizeUnsplashImages();
+  normalizeProxyImages();
 
   // Atualiza contador ao voltar pra aba
   window.addEventListener("focus", injectCartCount);
@@ -65,6 +67,7 @@ function setActiveNav(){
 function applyBrandSettings(settings){
   const storeName = settings?.storeName || "Tha Modas e Acessórios";
   document.querySelectorAll(".brand").forEach((brand) => {
+    if(brand.classList.contains("hero-brand")) return;
     const textSpan = brand.querySelector("span:last-child");
     if(textSpan) textSpan.textContent = storeName;
     if(settings?.logoUrl){
@@ -167,9 +170,7 @@ async function initHome(){
 
   renderCategories(categories);
 
-  renderProductsSection("gridNovidades", products.filter(p => (p.tags||[]).includes("novidades")).slice(0,8));
-  renderProductsSection("gridPromocoes", products.filter(p => p.salePrice).slice(0,8));
-  renderProductsSection("gridMaisVendidos", products.filter(p => (p.tags||[]).includes("mais_vendidos")).slice(0,8));
+  renderHighlights(products);
 }
 
 function renderCategories(categories){
@@ -196,6 +197,42 @@ function renderProductsSection(targetId, list){
   }
 
   el.innerHTML = list.map(p => productCard(p)).join("");
+}
+
+function renderHighlights(products){
+  const el = document.getElementById("gridDestaques");
+  if(!el) return;
+  const list = products.slice(0,4);
+  el.innerHTML = list.map((p, idx) => {
+    const priceOld = Number(p.price ?? 0);
+    const priceNew = Number(p.salePrice ?? (priceOld * 0.9));
+    const installment = priceNew / 3;
+    const img = resolveImage(p?.images?.[0]);
+
+    let badgesHtml = "";
+    if(p.salePrice != null) badgesHtml += `<div class="tag tag-promocao">Promo</div>`;
+    if((p.tags||[]).includes("novidades")) badgesHtml += `<div class="tag tag-novidades">Novidade</div>`;
+    if((p.tags||[]).includes("mais_vendidos")) badgesHtml += `<div class="tag tag-mais-vendidos">Mais Vendido</div>`;
+    if(!p.inStock) badgesHtml += `<div class="tag" style="background:#000;color:#fff">Esgotado</div>`;
+
+    return `
+      <article class="highlight-card" style="grid-column: span 3;">
+        <a class="highlight-media" href="./produto.html?slug=${encodeURIComponent(p.slug)}">
+          <img src="${img}" data-original="${p?.images?.[0] || ""}" onerror="handleImageError(this)" referrerpolicy="no-referrer" alt="${escapeHtml(p.name)}">
+        </a>
+        <div class="card-badges">${badgesHtml}</div>
+        <div class="highlight-body" style="padding-top: 4px;">
+          <div class="highlight-name">${escapeHtml(p.name)}</div>
+          <div class="highlight-prices">
+            <span class="price-old">${brl(priceOld)}</span>
+            <span class="price">${brl(priceNew)}</span>
+          </div>
+          <div class="highlight-installment">ou 3x de ${brl(installment)}</div>
+          <button class="btn btn-primary highlight-btn" type="button" data-add="${p.id}">Comprar</button>
+        </div>
+      </article>
+    `;
+  }).join("");
 }
 
 /* ================= LOJA ================= */
@@ -769,9 +806,9 @@ function renderProductDetail(p){
           }).join("")}
         </div>
         
-        <h2 class="section-title" style="margin-top:10px">${escapeHtml(p.name)}</h2>
+        <h2 class="product-title-page" style="margin-top:10px">${escapeHtml(p.name)}</h2>
         <div style="display:flex;align-items:center;gap:10px">
-          <div class="price" style="font-size:22px">${brl(priceOf(p))}</div>
+          <div class="product-price-page">${brl(priceOf(p))}</div>
           ${hasSale ? `<div class="price-old">${brl(p.price)}</div>` : ``}
         </div>
 
@@ -840,15 +877,39 @@ function priceOf(p){
 function resolveImage(src){
   const value = String(src || "").trim();
   if(!value) return PLACEHOLDER_IMAGE;
-  if(value.startsWith("http://") || value.startsWith("https://") || value.startsWith("/")) return value;
+  if(value.startsWith("https://images.weserv.nl/")) return value.replace("https://images.weserv.nl/","https://wsrv.nl/");
+  if(value.startsWith("https://wsrv.nl/")) return value;
+  if(value.startsWith("http://") || value.startsWith("https://")) return imageProxyUrl(value) || value;
+  if(value.startsWith("/")) return value;
   return PLACEHOLDER_IMAGE;
+}
+
+function normalizeUnsplashImages(){
+  document.querySelectorAll("img").forEach((img) => {
+    const src = img.getAttribute("src") || "";
+    if(src.includes("images.unsplash.com")){
+      const proxy = imageProxyUrl(src);
+      if(proxy) img.src = proxy;
+    }
+  });
+}
+
+function normalizeProxyImages(){
+  document.querySelectorAll("img").forEach((img) => {
+    const src = img.getAttribute("src") || "";
+    if(src.startsWith("https://images.weserv.nl/")){
+      img.src = src.replace("https://images.weserv.nl/","https://wsrv.nl/");
+    }
+  });
 }
 
 function imageProxyUrl(src){
   const value = String(src || "").trim();
   if(!value) return "";
-  if(value.startsWith("http://")) return `https://images.weserv.nl/?url=${encodeURIComponent(value.replace("http://",""))}`;
-  if(value.startsWith("https://")) return `https://images.weserv.nl/?url=${encodeURIComponent(value.replace("https://",""))}`;
+  if(value.startsWith("https://images.weserv.nl/")) return value.replace("https://images.weserv.nl/","https://wsrv.nl/");
+  if(value.startsWith("https://wsrv.nl/")) return value;
+  if(value.startsWith("http://")) return `https://wsrv.nl/?url=${encodeURIComponent(value.replace("http://",""))}`;
+  if(value.startsWith("https://")) return `https://wsrv.nl/?url=${encodeURIComponent(value.replace("https://",""))}`;
   return "";
 }
 
@@ -865,6 +926,7 @@ function handleImageError(img){
     }
   }
   img.src = PLACEHOLDER_IMAGE;
+  img.closest(".img-box")?.classList.add("is-fallback");
 }
 
 window.handleImageError = handleImageError;

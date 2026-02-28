@@ -9,21 +9,36 @@
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <a class="brand" href="./index.html"><span class="dot"></span><span>Tha Modas e Acessórios</span></a>
-    <nav class="nav">
+<div class="topbar">
+  <div class="topbar-inner">
+    <div>Frete grátis em pedidos acima de R$250</div>
+    <div class="topbar-right">📞 (11) 91234-5678</div>
+  </div>
+</div>
+<header class="hero-header">
+  <div class="header-inner header-hero">
+    <nav class="nav nav-left">
+      <a href="./index.html">Inicio</a>
       <a href="./loja.html">Loja</a>
-      <a href="./sobre.html">Sobre</a>
       <a href="./contato.html">Contato</a>
     </nav>
-    <div class="actions">
+    <a class="brand hero-brand" href="./index.html">
+      <img class="hero-logo" src="./uploads/logo-redonda.png" alt="Tha Modas e Acessórios">
+    </a>
+    <div class="actions hero-actions">
       <button class="pill" id="searchToggle" type="button" aria-label="Buscar">
         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 0 0114 0z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
         </svg>
       </button>
-      <a class="pill" href="./carrinho.html">Carrinho <span class="badge" id="cartCount">0</span></a>
+      <a class="pill" href="./carrinho.html">
+        Cart
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 7h12l-1.5 12h-9L6 7z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7a3 3 0 016 0"></path>
+        </svg>
+        <span class="badge" id="cartCount">0</span>
+      </a>
     </div>
   </div>
 </header>
@@ -36,12 +51,55 @@
   </div>
 </div>
 
+<section class="logo-block-section store-hero-branding">
+  <div class="logo-block">
+    <img class="logo-mark" src="./uploads/tha-modas-logo.png" width="300" alt="Tha Modas e Acessórios" style="height:auto">
+  </div>
+</section>
+
 <main class="container page">
-  <h1 class="section-title">Contato</h1>
-  <div class="notice">
-    <p><strong>WhatsApp:</strong> coloque aqui o número oficial.</p>
-    <p><strong>Instagram:</strong> @thamadaeacessorios</p>
-    <p><strong>Horário:</strong> seg–sex, 9h–18h (exemplo)</p>
+  <h1 class="section-title" style="margin-top:24px">Contato</h1>
+  
+  <div class="grid">
+    <div class="card contact-card">
+      <div class="card-body" style="padding:32px">
+        <h2 class="card-title" style="font-size:22px;margin-bottom:16px;color:#b77b66">Canais de Atendimento</h2>
+        <div style="display:flex;flex-direction:column;gap:16px;font-size:16px;color:#8b6f68">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:20px">📱</span>
+            <span><strong>WhatsApp:</strong> (11) 91234-5678</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:20px">📸</span>
+            <span><strong>Instagram:</strong> @thamadaeacessorios</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:20px">📧</span>
+            <span><strong>Email:</strong> contato@thamodas.com.br</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card contact-card">
+      <div class="card-body" style="padding:32px">
+        <h2 class="card-title" style="font-size:22px;margin-bottom:16px;color:#b77b66">Horário de Funcionamento</h2>
+        <div style="display:flex;flex-direction:column;gap:12px;font-size:16px;color:#8b6f68">
+          <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(199,154,122,.2);padding-bottom:8px">
+            <span>Segunda a Sexta</span>
+            <strong>09:00 — 18:00</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(199,154,122,.2);padding-bottom:8px">
+            <span>Sábado</span>
+            <strong>09:00 — 13:00</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding-bottom:8px">
+            <span>Domingo</span>
+            <strong style="color:var(--tm-rose)">Fechado</strong>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </main>
 
