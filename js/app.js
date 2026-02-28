@@ -472,9 +472,29 @@ async function initCarrinho(){
   const totalWithShippingValue = document.getElementById("cartTotalWithShipping");
   const btnCheckout = document.getElementById("btnCheckout");
   const clientNameInput = document.getElementById("clientName");
+  
+  // Endereço automático
+  const addressInput = document.getElementById("clientAddress");
+  const cityInput = document.getElementById("clientCity");
+  const numberInput = document.getElementById("clientNumber");
 
   function normalizeCep(value){
     return String(value || "").replace(/\D/g, "").slice(0, 8);
+  }
+
+  async function fetchAddress(cep){
+    if(cep.length !== 8) return;
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await res.json();
+      if(!data.erro){
+        if(addressInput) addressInput.value = data.logradouro;
+        if(cityInput) cityInput.value = `${data.bairro} - ${data.localidade}/${data.uf}`;
+        if(numberInput) numberInput.focus();
+      }
+    } catch(e){
+      console.error("Erro ao buscar CEP", e);
+    }
   }
 
   function regionLabel(region){
@@ -548,6 +568,8 @@ async function initCarrinho(){
   updateCheckoutState();
 
   cepInput?.addEventListener("input", () => {
+    const cep = normalizeCep(cepInput.value);
+    if(cep.length === 8) fetchAddress(cep);
     buildDeliveryOptions();
     computeShipping();
     updateCheckoutState();
@@ -576,11 +598,15 @@ async function initCarrinho(){
     const clientName = document.getElementById("clientName")?.value || "";
     const clientCity = document.getElementById("clientCity")?.value || "";
     const address = document.getElementById("clientAddress")?.value || "";
+    const number = document.getElementById("clientNumber")?.value || "";
+    const complement = document.getElementById("clientComplement")?.value || "";
     const cep = normalizeCep(document.getElementById("clientCep")?.value || "");
     const deliveryType = document.getElementById("deliveryType")?.value || "";
     const payment = document.getElementById("payment")?.value || "";
     const note = document.getElementById("note")?.value || "";
     const shippingState = computeShipping();
+
+    const fullAddress = `${address}, ${number}${complement ? " - " + complement : ""}`;
 
     const cart = cartGet();
     if(!cart.length){
@@ -592,12 +618,20 @@ async function initCarrinho(){
         alert("Por favor, preencha seu nome.");
         return;
     }
+    // Se não for retirada, exige endereço
+    const isRetirada = (deliveryType === "retirar");
+    if(!isRetirada){
+      if(!address || !number){
+          alert("Preencha o endereço e número.");
+          return;
+      }
+    }
 
     const deliveryDetail = shippingState?.label || "";
     const msg = cartWhatsAppMessage({
       clientName,
       clientCity,
-      address,
+      address: fullAddress,
       cep,
       deliveryType,
       deliveryDetail,

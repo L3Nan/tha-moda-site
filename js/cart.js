@@ -77,31 +77,75 @@ export function cartWhatsAppMessage({
 } = {}){
   const cart = cartGet();
   let lines = [];
-  lines.push("Oi! Quero fechar esse pedido na THA MODAS E ACESSÓRIOS 🛍️");
+  
+  const totalProducts = cartTotal();
+  const totalGeral = totalWithShipping != null ? totalWithShipping : totalProducts;
+  const shippingLabel = deliveryDetail || "A calcular";
+  const itemsCount = cart.reduce((acc, i) => acc + i.quantity, 0);
+  const storeName = "THA MODAS E ACESSÓRIOS";
+
+  // Formatar CEP
+  const cepFormatted = cep.replace(/^(\d{5})(\d{3})/, "$1-$2");
+
+  // Definir modalidade com Motoboy ou Retirada
+  let deliveryModeFormatado = deliveryDetail;
+  if(deliveryType === "retirar"){
+    deliveryModeFormatado = "Retirada";
+  } else if(deliveryType.startsWith("sp:") || deliveryType.startsWith("correios:sedex") || deliveryType.startsWith("correios:pac")){
+    // Se for SP, assumimos motoboy
+    if(deliveryType.startsWith("sp:")) deliveryModeFormatado = "Entrega (Motoboy)";
+    else deliveryModeFormatado = deliveryDetail; // Correios mantém o nome
+  }
+
+  // Cabeçalho e Resumo
+  lines.push(`🛍️ *Pedido — ${storeName}*`);
+  lines.push(`📌 Resumo: ${itemsCount} itens | Produtos: ${formatMoney(totalProducts)} | Frete: ${shippingFee ? formatMoney(shippingFee) : "Grátis"} | *Total: ${formatMoney(totalGeral)}*`);
   lines.push("");
 
-  let total = 0;
-  cart.forEach((i) => {
+  // Lista de Itens
+  lines.push(`*🧾 Itens*`);
+  lines.push("");
+  
+  cart.forEach((i, idx) => {
     const subtotal = i.unitPrice * i.quantity;
-    lines.push(`*${i.name}* — ${i.color}/${i.size}`);
-    lines.push(`Qtd: ${i.quantity} | Unit: ${formatMoney(i.unitPrice)} | Sub: ${formatMoney(subtotal)}`);
+    lines.push(`${idx + 1}) *${i.name}* (${i.color} / ${i.size})`);
+    lines.push(`Qtd: ${i.quantity} × ${formatMoney(i.unitPrice)} = ${formatMoney(subtotal)}`);
     lines.push("");
-    total += subtotal;
   });
 
-  lines.push(`*Total de produtos: ${formatMoney(total)}*`);
-  if(shippingFee != null) lines.push(`*Frete: ${formatMoney(shippingFee)}*`);
-  if(totalWithShipping != null) lines.push(`*Total com frete: ${formatMoney(totalWithShipping)}*`);
+  // Totais Detalhados
+  lines.push(`*💰 Totais*`);
+  lines.push(`• Produtos: ${formatMoney(totalProducts)}`);
+  lines.push(`• Frete: ${shippingFee ? formatMoney(shippingFee) : "Grátis"} (${shippingLabel})`);
+  lines.push(`• *Total com frete: ${formatMoney(totalGeral)}*`);
   lines.push("");
 
-  if(clientName) lines.push(`*Nome:* ${clientName}`);
-  if(cep) lines.push(`*CEP:* ${cep}`);
-  if(clientCity) lines.push(`*Bairro/Cidade:* ${clientCity}`);
-  if(address) lines.push(`*Endereço:* ${address}`);
-  if(deliveryType) lines.push(`*Entrega/Retirada:* ${deliveryType}`);
-  if(deliveryDetail) lines.push(`*Detalhe do frete:* ${deliveryDetail}`);
-  if(payment) lines.push(`*Pagamento:* ${payment}`);
-  if(note) lines.push(`*Obs:* ${note}`);
+  // Entrega
+  lines.push(`*🚚 Entrega*`);
+  lines.push(`• Nome: ${clientName}`);
+  if(cep) lines.push(`• CEP: ${cepFormatted}`);
+  if(address) lines.push(`• Endereço: ${address}`);
+  if(clientCity) lines.push(`• Bairro/Cidade: ${clientCity}`);
+  if(deliveryModeFormatado) lines.push(`• Modalidade: ${deliveryModeFormatado}`);
+  if(shippingLabel && deliveryType !== "retirar") lines.push(`• Detalhe do frete: ${shippingLabel}`);
+  lines.push("");
+
+  // Pagamento
+  if(payment){
+    lines.push(`*💳 Pagamento*`);
+    lines.push(`• Forma: ${payment}`);
+    lines.push("");
+  }
+
+  // Observações (só se existir)
+  if(note && note.trim()){
+    lines.push(`*📝 Observações*`);
+    lines.push(note);
+    lines.push("");
+  }
+
+  // Fechamento
+  lines.push(`*✅ Pode confirmar disponibilidade e prazo de entrega/retirada?*`);
 
   return encodeURIComponent(lines.join("\n"));
 }
