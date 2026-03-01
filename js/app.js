@@ -216,19 +216,21 @@ function renderHighlights(products){
     if(!p.inStock) badgesHtml += `<div class="tag" style="background:#000;color:#fff">Esgotado</div>`;
 
     return `
-      <article class="highlight-card" style="grid-column: span 3;">
+      <article class="card highlight-card product-card">
         <a class="highlight-media" href="./produto.html?slug=${encodeURIComponent(p.slug)}">
           <img src="${img}" data-original="${p?.images?.[0] || ""}" onerror="handleImageError(this)" referrerpolicy="no-referrer" alt="${escapeHtml(p.name)}">
         </a>
         <div class="card-badges">${badgesHtml}</div>
-        <div class="highlight-body" style="padding-top: 4px;">
-          <div class="highlight-name">${escapeHtml(p.name)}</div>
+        <div class="highlight-body card-body" style="padding-top: 4px;">
+          <div class="highlight-name card-title">${escapeHtml(p.name)}</div>
           <div class="highlight-prices">
             <span class="price-old">${brl(priceOld)}</span>
             <span class="price">${brl(priceNew)}</span>
           </div>
           <div class="highlight-installment">ou 3x de ${brl(installment)}</div>
-          <button class="btn btn-primary highlight-btn" type="button" data-add="${p.id}">Comprar</button>
+          <div class="card-actions">
+            <button class="btn btn-primary highlight-btn btn" type="button" data-add="${p.id}">Comprar</button>
+          </div>
         </div>
       </article>
     `;

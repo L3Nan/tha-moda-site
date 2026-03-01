@@ -665,6 +665,7 @@ body[data-page="home"] .hero-header{position:relative;box-shadow:none}
 }
 
 .step-card{
+  grid-column: span 3;
   background: #fff;
   border: 1px solid rgba(199,154,122,.2);
   border-radius: 16px;
@@ -698,6 +699,203 @@ body[data-page="home"] .hero-header{position:relative;box-shadow:none}
   font-size: 14px;
   color: var(--text-2);
   line-height: 1.5;
+}
+
+@media (max-width: 767px){
+  /* força 2 colunas (span 6) mesmo se tiver inline span 3 */
+  .grid > .card { grid-column: span 6 !important; min-width: 0; }
+
+  /* cards de produto: layout interno bom */
+  .product-card { display:flex; flex-direction:column; height:100%; }
+  .product-card .card-body { display:flex; flex-direction:column; flex:1; min-width:0; }
+  .product-card .card-actions { margin-top:auto; }
+
+  /* botão comprar ocupa toda largura */
+  .product-card .card-actions .btn { width:100%; min-height:44px; }
+
+  /* título mais legível */
+  .product-card .card-title{
+    font-size:14px;
+    line-height:1.25;
+    overflow:hidden;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    word-break: normal;
+    overflow-wrap: break-word; /* ok */
+    hyphens: auto;
+  }
+
+  /* badges quebram bonito */
+  .product-card .card-badges{ display:flex; flex-wrap:wrap; gap:6px; }
+  
+  /* Step cards com padding ajustado */
+  .step-card{ padding:18px; }
+}
+
+@media (max-width: 479px){
+  /* 1 coluna */
+  .grid > .card { grid-column: span 12 !important; }
+  
+  /* Step cards com padding menor */
+  .step-card{ padding:16px; }
+}
+
+@media (max-width: 900px){
+  /* Seção Categorias: vira carrossel */
+  #gridCategorias {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(200px, 78vw);
+    grid-template-columns: none; /* remove o template antigo */
+    gap: 12px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+
+    scroll-snap-type: x mandatory;
+    padding: 6px 14px 12px;
+    margin: 0 -14px; /* opcional: encostar nas bordas do mobile */
+  }
+
+  #gridCategorias::-webkit-scrollbar{ display: none; }
+  #gridCategorias{ scrollbar-width: none; }
+
+  #gridCategorias > .category-card {
+    grid-column: auto !important; /* reseta span */
+    scroll-snap-align: start;
+    min-width: 0;
+    max-width: none;
+    border-radius: 16px;
+    padding: 14px 14px 12px;
+
+    background: rgba(255,255,255,0.75);
+    border: 1px solid rgba(255, 200, 210, 0.9);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  #gridCategorias > .category-card .card-body {
+    min-height: auto;
+  }
+
+  #gridCategorias > .category-card .card-title {
+    font-size: 16px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 0 10px 0;
+  }
+
+  #gridCategorias > .category-card .category-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: transparent;
+    width: 100%;
+    border: 1px solid var(--tm-rose);
+  }
+
+  /* Força 2 colunas no Destaques (2x2) */
+  #gridDestaques, 
+  #gridLoja,
+  #gridCategoria,
+  .cart-empty-recos .grid,
+  .instagram-feed {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    overflow-x: visible; /* Garante que não tenha scroll lateral */
+  }
+
+  .instagram-feed {
+    display: grid;
+  }
+
+  /* Garante que os cards obedeçam ao grid */
+  #gridDestaques > .card,
+  #gridLoja > .card,
+  #gridCategoria > .card,
+  .cart-empty-recos .grid > .card,
+  .instagram-item {
+    grid-column: span 1 !important; /* Reseta span */
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* Ajustes específicos para Instagram */
+  .instagram-item {
+    border-radius: 14px;
+  }
+  .instagram-item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* CTA seguir: mais confortável no mobile */
+  .instagram-feed + div .btn.btn-primary {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  /* Ajustes específicos para card de produto */
+  .product-card .card-title{
+    font-size: 14px;
+    line-height: 1.25;
+    min-height: auto;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  .product-card .card-actions .btn{
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .product-card .card-badges{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  /* Anti-scroll lateral global no mobile */
+  body {
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 480px){
+  #gridCategorias{
+    grid-auto-columns: minmax(170px, 82vw);
+    gap: 10px;
+  }
+}
+
+@media (max-width: 360px){
+  /* 1 coluna em telas muito pequenas */
+  #gridDestaques,
+  #gridLoja,
+  #gridCategoria,
+  .cart-empty-recos .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .instagram-feed {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* Mantém 2 colunas no Insta */
+    gap: 10px;
+  }
 }
 
 /* =========================
@@ -790,11 +988,8 @@ body[data-page="home"] .hero-header{position:relative;box-shadow:none}
 }
 
 @media (max-width: 480px){
-  /* Instagram: 1 coluna no celular pequeno */
-  .instagram-feed{
-    grid-template-columns: 1fr !important;
-  }
-
+  /* Instagram: mantém 2 colunas, remove override antigo */
+  
   /* Tipografia um pouco mais compacta */
   .section-title{
     font-size: 24px;
